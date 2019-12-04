@@ -84,10 +84,12 @@ func TestTengo_Handle(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tengo := &Tengo{
-				Script:     tt.fields.Script,
-				RtVarName:  tt.fields.ReturnVar,
-				InitVarMap: tt.fields.InitVarMap,
-				compiled:   tt.fields.compiled,
+				Meta: Meta{
+					Script:     tt.fields.Script,
+					RtVarName:  tt.fields.ReturnVar,
+					InitVarMap: tt.fields.InitVarMap,
+				},
+				compiled: tt.fields.compiled,
 			}
 			gotRespRes, err := tengo.Handle(tt.args.ctx, tt.args.reqRes)
 			if (err != nil) != tt.wantErr {
