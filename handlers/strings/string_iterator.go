@@ -3,34 +3,27 @@ package strings
 import (
 	"context"
 
-	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlers/iterators"
-)
 
-type IteratorConf struct {
-	Type            string `json:"type"`
-	InterpreterName string `json:"interpreter_name"`
-	Script          string `json:"script"`
-}
+	"github.com/Focinfi/go-pipeline"
+)
 
 type StringIterator struct {
 	Separator     string             `json:"separator"`
-	IteratorConfs []IteratorConf     `json:"iterators"`
+	IteratorConfs []iterators.Conf   `json:"iterators"`
 	handlers      []pipeline.Handler `json:"-"`
 }
 
-func NewStringIterator(separator string, iteratorConfs []IteratorConf) (*StringIterator, error) {
-	handlers := make([]pipeline.Handler, 0, 1+len(iteratorConfs))
+func NewStringIterator(separator string, iteratorConfs []iterators.Conf) (*StringIterator, error) {
+	handlers := make([]pipeline.Handler, 0)
 	splitter := String{Separator: separator}
-	handlers = append(handlers, splitter)
-
-	for _, conf := range iteratorConfs {
-		iterator, err := iterators.NewIterator(conf.Type, conf.InterpreterName, conf.Script)
-		if err != nil {
-			return nil, err
-		}
-		handlers = append(handlers, iterator)
+	iterators, err := iterators.NewIterators(iteratorConfs)
+	if err != nil {
+		return nil, err
 	}
+
+	handlers = append(handlers, splitter)
+	handlers = append(handlers, iterators)
 	return &StringIterator{
 		Separator:     separator,
 		IteratorConfs: iteratorConfs,

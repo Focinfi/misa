@@ -37,6 +37,23 @@ func TestNewReducer(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "join",
+			args: args{
+				interpreterName: "tengo",
+				mapScript:       `string(r) ? string(r) + "," + string(v) : string(v)`,
+			},
+			reqRes: &pipeline.HandleRes{
+				Data: []interface{}{
+					1, "2", "3", 4,
+				},
+			},
+			wantResp: &pipeline.HandleRes{
+				Status: pipeline.HandleStatusOK,
+				Data:   "1,2,3,4",
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -5,13 +5,15 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/Focinfi/misa/handlers/iterators"
+
 	"github.com/Focinfi/go-pipeline"
 )
 
 func TestNewStringIterator(t *testing.T) {
 	type args struct {
 		separator     string
-		iteratorConfs []IteratorConf
+		iteratorConfs []iterators.Conf
 	}
 	tests := []struct {
 		name     string
@@ -24,7 +26,7 @@ func TestNewStringIterator(t *testing.T) {
 			name: "normal",
 			args: args{
 				separator: ",",
-				iteratorConfs: []IteratorConf{
+				iteratorConfs: []iterators.Conf{
 					{
 						Type:            "select",
 						InterpreterName: "tengo",
