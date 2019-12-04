@@ -7,6 +7,7 @@ import (
 
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlers/interpreters"
+	"github.com/Focinfi/misa/handlers/utils"
 )
 
 const mapScriptTemplateTengo = `
@@ -63,9 +64,14 @@ func (selector Mapper) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (
 		}
 
 		if reqRes.Data != nil {
-			inArr = reqRes.Data
+			items, err := utils.AynTypeToSlice(reqRes.Data)
+			if err != nil {
+				return nil, err
+			}
+			inArr = items
 		}
 	}
+
 	inRes.Data = map[string]interface{}{
 		"arr": inArr,
 	}

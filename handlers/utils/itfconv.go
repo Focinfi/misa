@@ -2,6 +2,8 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
+	"reflect"
 )
 
 func AnyTypeToString(src interface{}) (string, error) {
@@ -17,4 +19,22 @@ func AnyTypeToString(src interface{}) (string, error) {
 		}
 		return string(b), nil
 	}
+}
+
+func AynTypeToSlice(data interface{}) ([]interface{}, error) {
+	t := reflect.TypeOf(data).Kind()
+	v := reflect.ValueOf(data)
+	if t == reflect.Ptr {
+		t = reflect.TypeOf(data).Elem().Kind()
+		v = reflect.ValueOf(data).Elem()
+	}
+	if t != reflect.Slice {
+		return nil, errors.New("request data must a slice")
+	}
+
+	items := make([]interface{}, v.Len())
+	for i := 0; i < v.Len(); i++ {
+		items[i] = v.Index(i).Interface()
+	}
+	return items, nil
 }

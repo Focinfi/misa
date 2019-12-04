@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/Focinfi/misa/handlers/utils"
+
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlers/interpreters"
 )
@@ -65,7 +67,11 @@ func (selector Selector) Handle(ctx context.Context, reqRes *pipeline.HandleRes)
 		}
 
 		if reqRes.Data != nil {
-			inArr = reqRes.Data
+			items, err := utils.AynTypeToSlice(reqRes.Data)
+			if err != nil {
+				return nil, err
+			}
+			inArr = items
 		}
 	}
 	inRes.Data = map[string]interface{}{

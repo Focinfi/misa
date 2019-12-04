@@ -21,7 +21,26 @@ func TestNewMapper(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "square number",
+			name: "square string number",
+			args: args{
+				interpreterName: "tengo",
+				mapScript:       "int(v) * int(v)",
+			},
+			reqRes: &pipeline.HandleRes{
+				Data: []string{
+					"1", "2", "3", "4",
+				},
+			},
+			wantResp: &pipeline.HandleRes{
+				Status: pipeline.HandleStatusOK,
+				Data: []interface{}{
+					int64(1), int64(4), int64(9), int64(16),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "square mix number",
 			args: args{
 				interpreterName: "tengo",
 				mapScript:       "int(v) * int(v)",
