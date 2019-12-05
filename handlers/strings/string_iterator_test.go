@@ -30,17 +30,17 @@ func TestNewStringIterator(t *testing.T) {
 					{
 						Type:            "select",
 						InterpreterName: "tengo",
-						Script:          "int(v) % 2 == 0",
+						Script:          "int(value) % 2 == 0",
 					},
 					{
 						Type:            "map",
 						InterpreterName: "tengo",
-						Script:          "int(v) * int(v)",
+						Script:          "int(value) * int(value)",
 					},
 					{
 						Type:            "reduce",
 						InterpreterName: "tengo",
-						Script:          "int(r) ? int(r) + int(v) : int(v)",
+						Script:          "int(reduced) ? int(reduced) + int(value) : int(value)",
 					},
 				},
 			},

@@ -11,13 +11,8 @@ import (
 )
 
 const reduceScriptTemplateTengo = `
-accumulation := func(r, i, v) {
-	return %s
-}
 reduced := ""
-for i, v in arr {
-	reduced = accumulation(reduced, i, v)
-}
+import("enum").each(arr, func(key, value) { reduced = %s })
 `
 
 type Reducer struct {

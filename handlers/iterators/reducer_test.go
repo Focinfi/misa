@@ -24,7 +24,7 @@ func TestNewReducer(t *testing.T) {
 			name: "sum number",
 			args: args{
 				interpreterName: "tengo",
-				mapScript:       "int(r) ? int(r) + int(v) : int(v)",
+				mapScript:       "int(reduced) ? int(reduced) + int(value) : int(value)",
 			},
 			reqRes: &pipeline.HandleRes{
 				Data: []interface{}{
@@ -41,7 +41,7 @@ func TestNewReducer(t *testing.T) {
 			name: "join",
 			args: args{
 				interpreterName: "tengo",
-				mapScript:       `string(r) ? string(r) + "," + string(v) : string(v)`,
+				mapScript:       `string(reduced) ? string(reduced) + "," + string(value) : string(value)`,
 			},
 			reqRes: &pipeline.HandleRes{
 				Data: []interface{}{

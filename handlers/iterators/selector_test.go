@@ -24,7 +24,7 @@ func TestNewSelector(t *testing.T) {
 			name: "odd number",
 			args: args{
 				interpreterName: "tengo",
-				detectionScript: "int(v) % 2 == 0",
+				detectionScript: "int(value) % 2 == 0",
 			},
 			reqRes: &pipeline.HandleRes{
 				Data: []interface{}{

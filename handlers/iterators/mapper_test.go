@@ -24,7 +24,7 @@ func TestNewMapper(t *testing.T) {
 			name: "square string number",
 			args: args{
 				interpreterName: "tengo",
-				mapScript:       "int(v) * int(v)",
+				mapScript:       "int(value) * int(value)",
 			},
 			reqRes: &pipeline.HandleRes{
 				Data: []string{
@@ -43,7 +43,7 @@ func TestNewMapper(t *testing.T) {
 			name: "square mix number",
 			args: args{
 				interpreterName: "tengo",
-				mapScript:       "int(v) * int(v)",
+				mapScript:       "int(value) * int(value)",
 			},
 			reqRes: &pipeline.HandleRes{
 				Data: []interface{}{

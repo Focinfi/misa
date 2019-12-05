@@ -11,13 +11,7 @@ import (
 )
 
 const mapScriptTemplateTengo = `
-transition := func(i, v) {
-	return %s
-}
-mapped := []
-for i, v in arr {
-	mapped = append(mapped, transition(i, v))
-}
+mapped := import("enum").map(arr, func(key, value){ return %s })
 `
 
 type Mapper struct {

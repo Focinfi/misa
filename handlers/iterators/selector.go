@@ -12,15 +12,7 @@ import (
 )
 
 const detectionScriptTemplateTengo = `
-detection := func(i, v) {
-	return %s
-}
-selected := []
-for i, v in arr {
-	if detection(i, v) {
-		selected = append(selected, v)
-	}
-}
+selected := import("enum").filter(arr, func(key, value) { return %s })
 `
 
 type Selector struct {
