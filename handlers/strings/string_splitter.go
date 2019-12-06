@@ -8,11 +8,11 @@ import (
 	"github.com/Focinfi/misa/handlers/utils"
 )
 
-type String struct {
+type Splitter struct {
 	Separator string `json:"separator"`
 }
 
-func (str String) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
+func (str Splitter) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	if reqRes == nil || reqRes.Data == nil {
 		return nil, nil
 	}

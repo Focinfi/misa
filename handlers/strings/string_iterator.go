@@ -3,9 +3,8 @@ package strings
 import (
 	"context"
 
-	"github.com/Focinfi/misa/handlers/iterators"
-
 	"github.com/Focinfi/go-pipeline"
+	"github.com/Focinfi/misa/handlers/iterators"
 )
 
 type StringIterator struct {
@@ -16,7 +15,7 @@ type StringIterator struct {
 
 func NewStringIterator(separator string, iteratorConfs []iterators.Conf) (*StringIterator, error) {
 	handlers := make([]pipeline.Handler, 0)
-	splitter := String{Separator: separator}
+	splitter := Splitter{Separator: separator}
 	iterators, err := iterators.NewIterators(iteratorConfs)
 	if err != nil {
 		return nil, err

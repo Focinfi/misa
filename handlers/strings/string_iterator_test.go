@@ -5,9 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Focinfi/misa/handlers/iterators"
-
 	"github.com/Focinfi/go-pipeline"
+	"github.com/Focinfi/misa/handlers/iterators"
 )
 
 func TestNewStringIterator(t *testing.T) {

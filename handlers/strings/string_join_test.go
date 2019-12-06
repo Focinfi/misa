@@ -8,7 +8,7 @@ import (
 	"github.com/Focinfi/go-pipeline"
 )
 
-func TestString_Handle(t *testing.T) {
+func TestJoin_Handle(t *testing.T) {
 	type fields struct {
 		Separator string
 	}
@@ -24,35 +24,37 @@ func TestString_Handle(t *testing.T) {
 		wantErr     bool
 	}{
 		{
-			name: "string input",
+			name: "normal",
 			fields: fields{
 				Separator: ",",
 			},
 			args: args{
 				ctx: context.Background(),
 				reqRes: &pipeline.HandleRes{
-					Data: "one,two,three",
+					Data: []interface{}{
+						"1", 2, "3", 4,
+					},
 				},
 			},
 			wantRespRes: &pipeline.HandleRes{
 				Status: pipeline.HandleStatusOK,
-				Data:   []string{"one", "two", "three"},
+				Data:   "1,2,3,4",
 			},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			str := Splitter{
+			str := Join{
 				Separator: tt.fields.Separator,
 			}
 			gotRespRes, err := str.Handle(tt.args.ctx, tt.args.reqRes)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("String.Handle() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Join.Handle() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotRespRes, tt.wantRespRes) {
-				t.Errorf("String.Handle() = %v, want %v", gotRespRes, tt.wantRespRes)
+				t.Errorf("Join.Handle() = %v, want %v", gotRespRes, tt.wantRespRes)
 			}
 		})
 	}
