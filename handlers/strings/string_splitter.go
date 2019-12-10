@@ -12,6 +12,10 @@ type Splitter struct {
 	Separator string `json:"separator"`
 }
 
+func BuildSplitter(conf map[string]interface{}) pipeline.Handler {
+	return Splitter{Separator: conf["separator"].(string)}
+}
+
 func (str Splitter) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	if reqRes == nil || reqRes.Data == nil {
 		return nil, nil

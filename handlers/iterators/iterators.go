@@ -2,7 +2,10 @@ package iterators
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+
+	"github.com/Focinfi/misa/handlers/utils"
 
 	"github.com/Focinfi/misa/handlers/combination"
 
@@ -20,6 +23,14 @@ func NewIterator(t, interpreterName, script string) (pipeline.Handler, error) {
 	default:
 		return nil, errors.New("unsupported iterator type")
 	}
+}
+
+func BuildIterator(conf map[string]interface{}) pipeline.Handler {
+	i, err := NewIterator(conf["type"].(string), conf["interpreter_name"].(string), conf["script"].(string))
+	if err != nil {
+		panic(err)
+	}
+	return i
 }
 
 type Conf struct {
@@ -46,6 +57,22 @@ func NewIterators(iteratorConfs []Conf) (*Iterators, error) {
 		Confs:   iteratorConfs,
 		handler: combination.HandlerList{Handlers: handlers},
 	}, nil
+}
+
+func BuildIterators(conf map[string]interface{}) pipeline.Handler {
+	iteratorConfs := make([]Conf, 0)
+	confStr, err := utils.AnyTypeToString(conf["iterators"])
+	if err != nil {
+		panic(err.Error())
+	}
+	if err := json.Unmarshal([]byte(confStr), &iteratorConfs); err != nil {
+		panic(err.Error())
+	}
+	h, err := NewIterators(iteratorConfs)
+	if err != nil {
+		panic(err.Error())
+	}
+	return h
 }
 
 func (it Iterators) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {

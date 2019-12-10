@@ -8,6 +8,8 @@ import (
 	"github.com/Focinfi/go-pipeline"
 )
 
+var DefaultTimeRange = TimeRange{}
+
 type TimeRange struct{}
 
 func (tr TimeRange) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {

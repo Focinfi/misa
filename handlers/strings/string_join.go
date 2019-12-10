@@ -13,6 +13,10 @@ type Join struct {
 	Separator string `json:"separator"`
 }
 
+func BuildJoin(conf map[string]interface{}) pipeline.Handler {
+	return Join{Separator: conf["separator"].(string)}
+}
+
 func (str Join) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	if reqRes == nil || reqRes.Data == nil {
 		return &pipeline.HandleRes{

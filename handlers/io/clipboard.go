@@ -8,6 +8,11 @@ import (
 	"github.com/go-vgo/robotgo/clipboard"
 )
 
+var (
+	DefaultClipboardReader = ClipboardReader{}
+	DefaultClipboardWriter = ClipboardWriter{}
+)
+
 type ClipboardReader struct{}
 
 func (cb ClipboardReader) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {

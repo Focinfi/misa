@@ -7,6 +7,8 @@ import (
 	"github.com/Focinfi/go-pipeline"
 )
 
+var DefaultIntRange = IntRange{}
+
 type IntRange struct{}
 
 func (ir IntRange) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
