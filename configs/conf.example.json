@@ -1,0 +1,69 @@
+[
+  {
+    "id": "parse-unix",
+    "conf": [
+      {
+        "desc": "parse unix timestamp into time.Time in local timezone",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "parser-unix"
+      }
+    ]
+  },
+  {
+    "id": "write-to-clipboard",
+    "conf": [
+      {
+        "desc": "write request data into clipboard",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "io-clipboard-writer"
+      }
+    ]
+  },
+  {
+    "id": "read-from-clipboard",
+    "conf": [
+      {
+        "desc": "read data from clipboard",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "io-clipboard-reader"
+      }
+    ]
+  },
+  {
+    "id": "print",
+    "conf": [
+      {
+        "desc": "print data into stdout",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "io-stdout"
+      }
+    ]
+  },
+  {
+    "id": "parse-unix-from-clipboard",
+    "conf": [
+      {
+        "desc": "read data",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "read-from-clipboard"
+      },
+      {
+        "desc": "parse unix",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-unix"
+      },
+      {
+        "desc": "write data",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "write-to-clipboard"
+      }
+    ]
+  }
+]
