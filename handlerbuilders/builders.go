@@ -6,6 +6,7 @@ import (
 	"github.com/Focinfi/misa/handlerbuilders/interpreters"
 	"github.com/Focinfi/misa/handlerbuilders/io"
 	"github.com/Focinfi/misa/handlerbuilders/iterators"
+	"github.com/Focinfi/misa/handlerbuilders/net"
 	"github.com/Focinfi/misa/handlerbuilders/parsers"
 	"github.com/Focinfi/misa/handlerbuilders/strings"
 )
@@ -75,5 +76,13 @@ var DefaultBuilders = pipeline.MapHandlerBuilderGetter{
 	}),
 	"string-join": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
 		return strings.BuildJoin(conf)
+	}),
+	"finder-json-attr": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+		return strings.BuildFinderJSONAttr(conf)
+	}),
+
+	// net
+	"net-http": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+		return net.DefaultHTTP
 	}),
 }

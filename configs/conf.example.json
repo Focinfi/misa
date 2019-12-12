@@ -1,5 +1,19 @@
 [
   {
+    "id": "join-newline",
+    "conf": [
+      {
+        "desc": "join slice with newline",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "string-join",
+        "handler_builder_conf": {
+          "separator": "\n"
+        }
+      }
+    ]
+  },
+  {
     "id": "parse-unix",
     "conf": [
       {
@@ -148,20 +162,6 @@
     ]
   },
   {
-    "id": "join-newline",
-    "conf": [
-      {
-        "desc": "join slice with newline",
-        "timeout": 100,
-        "required": true,
-        "handler_builder_name": "string-join",
-        "handler_builder_conf": {
-          "separator": "\n"
-        }
-      }
-    ]
-  },
-  {
     "id": "gen-in-time-slice",
     "conf": [
       {
@@ -249,6 +249,41 @@
         "handler_builder_name": "io-writer-file",
         "handler_builder_conf": {
           "path": "service-pay_add_F_bank_trans_type_and_F_trans_business_entry_to_trans.sql"
+        }
+      }
+    ]
+  },
+  {
+    "id": "get-first-pipeline-id",
+    "conf": [
+      {
+        "desc": "parse json into map",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "do http request",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "net-http"
+      },
+      {
+        "desc": "get body",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "finder-json-attr",
+        "handler_builder_conf": {
+          "attr_path": "body"
+        }
+      },
+      {
+        "desc": "find first item.id",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "finder-json-attr",
+        "handler_builder_conf": {
+          "attr_path": "[0].id"
         }
       }
     ]

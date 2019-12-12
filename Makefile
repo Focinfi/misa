@@ -5,6 +5,6 @@ test: modvendor
 	go test ./... -v --cover
 
 modvendor:
-	GOPROXY=https://goproxy.cn go mod vendor
+	GO111MODULE=on GOPROXY=https://goproxy.cn go mod vendor
 
 default: reinstall_cmd_misa
