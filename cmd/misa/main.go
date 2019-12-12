@@ -79,7 +79,8 @@ func main() {
 				}
 				list = append(list, [2]string{id, lineDesc(*handler.(*pipeline.Line))})
 			}
-			layout := fmt.Sprintf("%%-%ds%%v\n", maxLen+5)
+			layout := fmt.Sprintf("\tb%%-%ds%%v\n", maxLen+5)
+			fmt.Println("Misa Pipelines:")
 			for _, h := range list {
 				fmt.Printf(layout, h[0], h[1])
 			}
