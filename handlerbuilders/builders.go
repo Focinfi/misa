@@ -31,15 +31,19 @@ var DefaultBuilders = pipeline.MapHandlerBuilderGetter{
 	}),
 
 	// io
-	"io-clipboard-reader": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+	"io-reader-clipboard": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
 		return io.DefaultClipboardReader
 	}),
-	"io-clipboard-writer": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+	"io-writer-clipboard": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
 		return io.DefaultClipboardWriter
 	}),
-	"io-stdout": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
-		return io.DefaultStdOut
+	"io-writer-stdout": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+		return io.DefaultStdOutWriter
 	}),
+	"io-writer-file": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+		return io.BuildFile(conf)
+	}),
+
 	"parser-unix": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
 		return parsers.DefaultUnixParser
 	}),

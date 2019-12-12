@@ -17,7 +17,7 @@
         "desc": "write request data into clipboard",
         "timeout": 10000,
         "required": true,
-        "handler_builder_name": "io-clipboard-writer"
+        "handler_builder_name": "io-writer-clipboard"
       }
     ]
   },
@@ -28,7 +28,7 @@
         "desc": "read data from clipboard",
         "timeout": 10000,
         "required": true,
-        "handler_builder_name": "io-clipboard-reader"
+        "handler_builder_name": "io-reader-clipboard"
       }
     ]
   },
@@ -39,7 +39,7 @@
         "desc": "print data into stdout",
         "timeout": 1000,
         "required": true,
-        "handler_builder_name": "io-stdout"
+        "handler_builder_name": "io-writer-stdout"
       }
     ]
   },
@@ -59,10 +59,13 @@
         "ref_handler_id": "parse-unix"
       },
       {
-        "desc": "write data",
+        "desc": "write data to file tmp",
         "timeout": 100,
         "required": true,
-        "ref_handler_id": "write-to-clipboard"
+        "handler_builder_name": "io-writer-file",
+        "handler_builder_conf": {
+          "path": "tmp"
+        }
       }
     ]
   }
