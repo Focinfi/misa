@@ -30,7 +30,7 @@ func TestTimeRange_Handle(t *testing.T) {
 					Data: map[string]interface{}{
 						"start": time.Date(2019, 12, 1, 0, 0, 0, 0, time.Local),
 						"end":   time.Date(2019, 12, 2, 0, 0, 0, 0, time.Local),
-						"step":  time.Hour * 7,
+						"step":  "7h",
 					},
 				},
 			},

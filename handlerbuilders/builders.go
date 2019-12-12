@@ -32,20 +32,24 @@ var DefaultBuilders = pipeline.MapHandlerBuilderGetter{
 
 	// io
 	"io-reader-clipboard": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
-		return io.DefaultClipboardReader
+		return io.DefaultReaderClipboard
 	}),
 	"io-writer-clipboard": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
-		return io.DefaultClipboardWriter
+		return io.DefaultWriterClipboard
 	}),
 	"io-writer-stdout": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
-		return io.DefaultStdOutWriter
+		return io.DefaultWriterStdOut
 	}),
 	"io-writer-file": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
 		return io.BuildFile(conf)
 	}),
 
+	// parser
 	"parser-unix": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
 		return parsers.DefaultUnixParser
+	}),
+	"parser-json": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+		return parsers.DefaultParserJSON
 	}),
 
 	// iterators

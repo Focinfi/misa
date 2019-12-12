@@ -7,13 +7,13 @@ import (
 	"github.com/Focinfi/go-pipeline"
 )
 
-var DefaultStdOutWriter = StdOutWriter{}
+var DefaultWriterStdOut = WriterStdOut{}
 
-type StdOutWriter struct {
+type WriterStdOut struct {
 	//FormatName string `json:"formatName"`
 }
 
-func (stdout StdOutWriter) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
+func (stdout WriterStdOut) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	respRes = &pipeline.HandleRes{}
 	if reqRes != nil {
 		fmt.Println(reqRes.Data)

@@ -9,17 +9,17 @@ import (
 	"github.com/Focinfi/misa/handlerbuilders/utils"
 )
 
-type File struct {
+type WriterFile struct {
 	Path string `json:"path"`
 }
 
 func BuildFile(conf map[string]interface{}) pipeline.Handler {
-	return &File{
+	return &WriterFile{
 		Path: conf["path"].(string),
 	}
 }
 
-func (file File) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
+func (file WriterFile) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	respRes = &pipeline.HandleRes{}
 	if reqRes != nil {
 		respRes, err = reqRes.Copy()

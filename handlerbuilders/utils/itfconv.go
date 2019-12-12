@@ -3,7 +3,9 @@ package utils
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"reflect"
+	"strconv"
 )
 
 func AnyTypeToString(src interface{}) (string, error) {
@@ -37,4 +39,8 @@ func AynTypeToSlice(data interface{}) ([]interface{}, error) {
 		items[i] = v.Index(i).Interface()
 	}
 	return items, nil
+}
+
+func AnyTypeToInt64(data interface{}) (int64, error) {
+	return strconv.ParseInt(fmt.Sprint(data), 10, 64)
 }

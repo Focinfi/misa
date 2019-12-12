@@ -44,6 +44,51 @@
     ]
   },
   {
+    "id": "parse-json",
+    "conf": [
+      {
+        "desc": "parse json string",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "parser-json"
+      }
+    ]
+  },
+  {
+    "id":  "gen-int-slice",
+    "conf": [
+      {
+        "desc": "parse json into map",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "generate int slice",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "generator-int-range"
+      }
+    ]
+  },
+  {
+    "id": "gen-time-slice",
+    "conf": [
+      {
+        "desc": "parse json to map",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "generate time slice",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "generator-time-range"
+      }
+    ]
+  },
+  {
     "id": "parse-unix-from-clipboard",
     "conf": [
       {
@@ -57,15 +102,6 @@
         "timeout": 100,
         "required": true,
         "ref_handler_id": "parse-unix"
-      },
-      {
-        "desc": "write data to file tmp",
-        "timeout": 100,
-        "required": true,
-        "handler_builder_name": "io-writer-file",
-        "handler_builder_conf": {
-          "path": "tmp"
-        }
       }
     ]
   }

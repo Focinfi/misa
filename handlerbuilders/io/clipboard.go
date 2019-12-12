@@ -9,13 +9,13 @@ import (
 )
 
 var (
-	DefaultClipboardReader = ClipboardReader{}
-	DefaultClipboardWriter = ClipboardWriter{}
+	DefaultReaderClipboard = ReaderClipboard{}
+	DefaultWriterClipboard = WriterClipboard{}
 )
 
-type ClipboardReader struct{}
+type ReaderClipboard struct{}
 
-func (cb ClipboardReader) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
+func (cb ReaderClipboard) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	cbData, err := clipboard.ReadAll()
 	if err != nil {
 		return nil, err
@@ -34,9 +34,9 @@ func (cb ClipboardReader) Handle(ctx context.Context, reqRes *pipeline.HandleRes
 	return respRes, nil
 }
 
-type ClipboardWriter struct{}
+type WriterClipboard struct{}
 
-func (cb ClipboardWriter) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
+func (cb WriterClipboard) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	if reqRes == nil {
 		return nil, nil
 	}

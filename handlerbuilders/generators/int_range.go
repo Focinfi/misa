@@ -3,6 +3,9 @@ package generators
 import (
 	"context"
 	"errors"
+	"fmt"
+
+	"github.com/Focinfi/misa/handlerbuilders/utils"
 
 	"github.com/Focinfi/go-pipeline"
 )
@@ -18,11 +21,20 @@ func (ir IntRange) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (resp
 			return nil, err
 		}
 
-		conf := reqRes.Data.(map[string]int)
-		start := conf["start"]
-		end := conf["end"]
-		step := conf["step"]
-		rt := make([]int, 0)
+		conf := reqRes.Data.(map[string]interface{})
+		start, err := utils.AnyTypeToInt64(conf["start"])
+		if err != nil {
+			return nil, fmt.Errorf("param start is not int, err: %v", err)
+		}
+		end, err := utils.AnyTypeToInt64(conf["end"])
+		if err != nil {
+			return nil, fmt.Errorf("param end is not int, err: %v", err)
+		}
+		step, err := utils.AnyTypeToInt64(conf["step"])
+		if err != nil {
+			return nil, fmt.Errorf("param step is not int, err: %v", err)
+		}
+		rt := make([]int64, 0)
 		cur := start
 		for cur <= end {
 			rt = append(rt, cur)

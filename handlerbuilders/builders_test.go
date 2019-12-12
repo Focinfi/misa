@@ -23,7 +23,7 @@ func Test(t *testing.T) {
 			mapperDate,
 			mapperTemplate,
 			strings.Join{Separator: "\n"},
-			io.ClipboardWriter{},
+			io.WriterClipboard{},
 		},
 	}
 	resp, err := h.Handle(context.Background(), &pipeline.HandleRes{

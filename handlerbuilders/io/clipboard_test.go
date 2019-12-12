@@ -9,7 +9,7 @@ import (
 	"github.com/go-vgo/robotgo/clipboard"
 )
 
-func TestClipboardReader_Handle(t *testing.T) {
+func TestReaderClipboard_Handle(t *testing.T) {
 	tests := []struct {
 		name        string
 		toCopy      string
@@ -31,20 +31,20 @@ func TestClipboardReader_Handle(t *testing.T) {
 			if err := clipboard.WriteAll(tt.toCopy); err != nil {
 				t.Fatal(err)
 			}
-			cb := ClipboardReader{}
+			cb := ReaderClipboard{}
 			gotRespRes, err := cb.Handle(context.Background(), nil)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ClipboardReader.Handle() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ReaderClipboard.Handle() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotRespRes, tt.wantRespRes) {
-				t.Errorf("ClipboardReader.Handle() = %v, want %v", gotRespRes, tt.wantRespRes)
+				t.Errorf("ReaderClipboard.Handle() = %v, want %v", gotRespRes, tt.wantRespRes)
 			}
 		})
 	}
 }
 
-func TestClipboardWriter_Handle(t *testing.T) {
+func TestWriterClipboard_Handle(t *testing.T) {
 	tests := []struct {
 		name        string
 		reqRes      *pipeline.HandleRes
@@ -67,14 +67,14 @@ func TestClipboardWriter_Handle(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cb := ClipboardWriter{}
+			cb := WriterClipboard{}
 			gotRespRes, err := cb.Handle(context.Background(), tt.reqRes)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ClipboardWriter.Handle() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("WriterClipboard.Handle() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotRespRes, tt.wantRespRes) {
-				t.Errorf("ClipboardWriter.Handle() = %v, want %v", gotRespRes, tt.wantRespRes)
+				t.Errorf("WriterClipboard.Handle() = %v, want %v", gotRespRes, tt.wantRespRes)
 			}
 			copied, err := clipboard.ReadAll()
 			if err != nil {
