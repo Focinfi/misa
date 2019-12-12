@@ -17,7 +17,7 @@ selected := import("enum").filter(arr, func(key, value) { return %s })
 
 type Selector struct {
 	InterpreterName string           `json:"interpreter_name"`
-	DetectionScript string           `json:"detection_script"`
+	Script          string           `json:"script"`
 	interpreter     pipeline.Handler `json:"-"`
 }
 
@@ -36,7 +36,7 @@ func NewSelector(interpreterName, detectionScript string) (*Selector, error) {
 	interpreter := builder.Build(meta.ToMap())
 	return &Selector{
 		InterpreterName: interpreterName,
-		DetectionScript: detectionScript,
+		Script:          detectionScript,
 		interpreter:     interpreter,
 	}, nil
 }

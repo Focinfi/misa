@@ -11,7 +11,7 @@ import (
 func TestNewReducer(t *testing.T) {
 	type args struct {
 		interpreterName string
-		mapScript       string
+		script          string
 	}
 	tests := []struct {
 		name     string
@@ -24,7 +24,7 @@ func TestNewReducer(t *testing.T) {
 			name: "sum number",
 			args: args{
 				interpreterName: "tengo",
-				mapScript:       "int(reduced) ? int(reduced) + int(value) : int(value)",
+				script:          "int(reduced) ? int(reduced) + int(value) : int(value)",
 			},
 			reqRes: &pipeline.HandleRes{
 				Data: []interface{}{
@@ -41,7 +41,7 @@ func TestNewReducer(t *testing.T) {
 			name: "join",
 			args: args{
 				interpreterName: "tengo",
-				mapScript:       `string(reduced) ? string(reduced) + "," + string(value) : string(value)`,
+				script:          `string(reduced) ? string(reduced) + "," + string(value) : string(value)`,
 			},
 			reqRes: &pipeline.HandleRes{
 				Data: []interface{}{
@@ -57,7 +57,7 @@ func TestNewReducer(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewReducer(tt.args.interpreterName, tt.args.mapScript)
+			got, err := NewReducer(tt.args.interpreterName, tt.args.script)
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -53,14 +53,17 @@ var DefaultBuilders = pipeline.MapHandlerBuilderGetter{
 	}),
 
 	// iterators
+	"iterator": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+		return iterators.BuildIterator(conf)
+	}),
 	"iterator-map": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
-		return iterators.BuildIterator(conf)
+		return iterators.BuildIteratorByType("map", conf)
 	}),
-	"iterator-reducer": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
-		return iterators.BuildIterator(conf)
+	"iterator-reduce": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+		return iterators.BuildIteratorByType("reduce", conf)
 	}),
-	"iterator-selector": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
-		return iterators.BuildIterator(conf)
+	"iterator-select": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+		return iterators.BuildIteratorByType("select", conf)
 	}),
 	"iterators": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
 		return iterators.BuildIterators(conf)

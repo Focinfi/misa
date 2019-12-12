@@ -17,7 +17,7 @@ import("enum").each(arr, func(key, value) { reduced = %s })
 
 type Reducer struct {
 	InterpreterName string           `json:"interpreter_name"`
-	MapScript       string           `json:"map_script"`
+	Script          string           `json:"script"`
 	interpreter     pipeline.Handler `json:"-"`
 }
 
@@ -36,7 +36,7 @@ func NewReducer(interpreterName, reduceScript string) (*Reducer, error) {
 	interpreter := builder.Build(meta.ToMap())
 	return &Reducer{
 		InterpreterName: interpreterName,
-		MapScript:       reduceScript,
+		Script:          reduceScript,
 		interpreter:     interpreter,
 	}, nil
 }

@@ -5,10 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
+	"sort"
 	"strings"
 
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlers"
+	"github.com/jedib0t/go-pretty/table"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 )
@@ -71,19 +74,27 @@ func main() {
 			if err := handlers.InitHandlers(configPath); err != nil {
 				log.Fatalf("init pipelines failed: %v", err)
 			}
-			maxLen := 0
-			list := make([][2]string, 0, len(handlers.Handlers))
-			for id, handler := range handlers.Handlers {
-				if len(id) > maxLen {
-					maxLen = len(id)
-				}
-				list = append(list, [2]string{id, lineDesc(*handler.(*pipeline.Line))})
+			t := table.NewWriter()
+			t.SetTitle("Misa Pipelines")
+
+			style := table.StyleBold
+			style.Options.SeparateRows = true
+			t.SetStyle(style)
+
+			t.SetOutputMirror(os.Stdout)
+			t.AppendHeader(table.Row{"Pipeline", "Steps"})
+
+			ids := make([]string, 0, len(handlers.Handlers))
+			for id := range handlers.Handlers {
+				ids = append(ids, id)
 			}
-			layout := fmt.Sprintf("\t%%-%ds%%v\n", maxLen+5)
-			fmt.Println("Misa Pipelines:")
-			for _, h := range list {
-				fmt.Printf(layout, h[0], h[1])
+			sort.Strings(ids)
+			for _, id := range ids {
+				handler := handlers.Handlers[id]
+				desc := strings.Join(lineDesc(*handler.(*pipeline.Line)), "\n")
+				t.AppendRow(table.Row{id, desc})
 			}
+			t.Render()
 		},
 	}
 
@@ -101,11 +112,33 @@ func main() {
 	rootCmd.Execute()
 }
 
-func lineDesc(line pipeline.Line) string {
+func lineDesc(line pipeline.Line) []string {
 	descs := make([]string, 0, len(line.Pipes))
+
 	for i, pipe := range line.Pipes {
-		desc := fmt.Sprintf("%d.%v", i+1, pipe.Conf.Desc)
+		var d string
+		switch pipe.Type {
+		case pipeline.PipeTypeSingle:
+			d = pipe.Conf.Desc
+		case pipeline.PipeTypeParallel:
+			parallel := pipe.Handler.(*pipeline.Parallel)
+			ps := make([]string, 0, len(parallel.Pipes))
+			for _, p := range parallel.Pipes {
+				ps = append(ps, p.Conf.Desc)
+			}
+			d = "[" + strings.Join(ps, "|") + "]"
+		}
+
+		desc := fmt.Sprintf("%d.%v", i+1, d)
 		descs = append(descs, desc)
 	}
-	return strings.Join(descs, " -> ")
+	return descs
+}
+
+func whiteSpaceByLen(l int) string {
+	runes := make([]rune, 0, l)
+	for i := 0; i < l; i++ {
+		runes = append(runes, ' ')
+	}
+	return string(runes)
 }

@@ -16,7 +16,7 @@ mapped := import("enum").map(arr, func(key, value){ return %s })
 
 type Mapper struct {
 	InterpreterName string           `json:"interpreter_name"`
-	MapScript       string           `json:"map_script"`
+	Script          string           `json:"script"`
 	interpreter     pipeline.Handler `json:"-"`
 }
 
@@ -35,7 +35,7 @@ func NewMapper(interpreterName, mapScript string) (*Mapper, error) {
 	interpreter := builder.Build(meta.ToMap())
 	return &Mapper{
 		InterpreterName: interpreterName,
-		MapScript:       mapScript,
+		Script:          mapScript,
 		interpreter:     interpreter,
 	}, nil
 }

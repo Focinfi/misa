@@ -104,5 +104,153 @@
         "ref_handler_id": "parse-unix"
       }
     ]
+  },
+  {
+    "id": "sum-int",
+    "conf": [
+      {
+        "desc": "sum int",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "iterator-reduce",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "int(reduced) ? int(reduced) + int(value) : int(value)"
+        }
+      }
+    ]
+  },
+  {
+    "id": "gen-int-square-slice",
+    "conf": [
+      {
+        "desc": "gen int slice",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "gen-int-slice"
+      },
+      {
+        "desc": "square each int",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "int(value) * int(value)"
+        }
+      },
+      {
+        "desc": "sum",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "sum-int"
+      }
+    ]
+  },
+  {
+    "id": "join-newline",
+    "conf": [
+      {
+        "desc": "join slice with newline",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "string-join",
+        "handler_builder_conf": {
+          "separator": "\n"
+        }
+      }
+    ]
+  },
+  {
+    "id": "gen-in-time-slice",
+    "conf": [
+      {
+        "desc": "gen daily slice",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "gen-time-slice"
+      },
+      {
+        "desc": "each format yyyy_mm_dd",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "import(\"times\").time_format(value, \"2006_01_02\")"
+        }
+      },
+      {
+        "desc": "each concat",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "\"ALTER TABLE innercheck.t_pay_trans_\"+ value + \" ADD COLUMN F_bank_trans_type tinyint(8) unsigned not null default 1, add column F_trans_business_entry tinyint(8) unsigned not null default 1;\""
+        }
+      },
+      {
+        "desc": "join together",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "join-newline"
+      },
+      {
+        "desc": "write to file",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "io-writer-file",
+        "handler_builder_conf": {
+          "path": "service-inner-check_add_F_bank_trans_type_and_F_trans_business_entry_to_pay_trans.sql"
+        }
+      }
+    ]
+  },
+  {
+    "id": "gen-in-int-slice",
+    "conf": [
+      {
+        "desc": "gen int slice",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "gen-int-slice"
+      },
+      {
+        "desc": "each db index, table index",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "{ db_idx: value/10, table_idx: value%10 }"
+        }
+      },
+      {
+        "desc": "each concat",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "\"ALTER TABLE pay_\" + value.db_idx + \".t_trans_\" + value.table_idx + \" ADD COLUMN F_bank_trans_type tinyint(8) unsigned not null default 1, add column F_trans_business_entry tinyint(8) unsigned not null default 1;\""
+        }
+      },
+      {
+        "desc": "join together",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "join-newline"
+      },
+      {
+        "desc": "write to file",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "io-writer-file",
+        "handler_builder_conf": {
+          "path": "service-pay_add_F_bank_trans_type_and_F_trans_business_entry_to_trans.sql"
+        }
+      }
+    ]
   }
 ]

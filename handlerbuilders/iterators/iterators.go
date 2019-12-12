@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/Focinfi/misa/handlerbuilders/utils"
 
@@ -26,11 +27,22 @@ func NewIterator(t, interpreterName, script string) (pipeline.Handler, error) {
 }
 
 func BuildIterator(conf map[string]interface{}) pipeline.Handler {
-	i, err := NewIterator(conf["type"].(string), conf["interpreter_name"].(string), conf["script"].(string))
+	t := fmt.Sprint(conf["type"])
+	name := fmt.Sprint(conf["interpreter_name"])
+	script := fmt.Sprint(conf["script"])
+	i, err := NewIterator(t, name, script)
 	if err != nil {
 		panic(err)
 	}
 	return i
+}
+
+func BuildIteratorByType(t string, conf map[string]interface{}) pipeline.Handler {
+	if conf == nil {
+		conf = make(map[string]interface{})
+	}
+	conf["type"] = t
+	return BuildIterator(conf)
 }
 
 type Conf struct {

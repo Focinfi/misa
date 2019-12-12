@@ -11,7 +11,7 @@ import (
 func TestNewMapper(t *testing.T) {
 	type args struct {
 		interpreterName string
-		mapScript       string
+		script          string
 	}
 	tests := []struct {
 		name     string
@@ -24,7 +24,7 @@ func TestNewMapper(t *testing.T) {
 			name: "square string number",
 			args: args{
 				interpreterName: "tengo",
-				mapScript:       "int(value) * int(value)",
+				script:          "int(value) * int(value)",
 			},
 			reqRes: &pipeline.HandleRes{
 				Data: []string{
@@ -43,7 +43,7 @@ func TestNewMapper(t *testing.T) {
 			name: "square mix number",
 			args: args{
 				interpreterName: "tengo",
-				mapScript:       "int(value) * int(value)",
+				script:          "int(value) * int(value)",
 			},
 			reqRes: &pipeline.HandleRes{
 				Data: []interface{}{
@@ -61,7 +61,7 @@ func TestNewMapper(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewMapper(tt.args.interpreterName, tt.args.mapScript)
+			got, err := NewMapper(tt.args.interpreterName, tt.args.script)
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -3,7 +3,6 @@ package io
 import (
 	"context"
 	"io/ioutil"
-	"os"
 
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlerbuilders/utils"
@@ -32,7 +31,7 @@ func (file WriterFile) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (
 			if err != nil {
 				return nil, err
 			}
-			if err := ioutil.WriteFile(file.Path, []byte(content), os.ModePerm); err != nil {
+			if err := ioutil.WriteFile(file.Path, []byte(content), 0644); err != nil {
 				return nil, err
 			}
 		}

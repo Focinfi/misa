@@ -11,7 +11,7 @@ import (
 func TestNewSelector(t *testing.T) {
 	type args struct {
 		interpreterName string
-		detectionScript string
+		script          string
 	}
 	tests := []struct {
 		name     string
@@ -24,7 +24,7 @@ func TestNewSelector(t *testing.T) {
 			name: "odd number",
 			args: args{
 				interpreterName: "tengo",
-				detectionScript: "int(value) % 2 == 0",
+				script:          "int(value) % 2 == 0",
 			},
 			reqRes: &pipeline.HandleRes{
 				Data: []interface{}{
@@ -42,7 +42,7 @@ func TestNewSelector(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewSelector(tt.args.interpreterName, tt.args.detectionScript)
+			got, err := NewSelector(tt.args.interpreterName, tt.args.script)
 			if err != nil {
 				t.Fatal(err)
 			}
