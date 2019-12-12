@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
-
-	"github.com/mitchellh/go-homedir"
+	"strings"
 
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlers"
+	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 )
 
@@ -63,7 +64,31 @@ func main() {
 	cmdRun.Flags().StringVarP(&requestMeta, "meta", "m", "{}", "request meta")
 	cmdRun.Flags().BoolVarP(&verbosely, "verbosely", "v", false, "print every step result")
 
-	var rootCmd = &cobra.Command{Use: "misa [-c config path]"}
+	var cmdLs = &cobra.Command{
+		Use:   "ls",
+		Short: "list all pipelines",
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := handlers.InitHandlers(configPath); err != nil {
+				log.Fatalf("init pipelines failed: %v", err)
+			}
+			maxLen := 0
+			list := make([][2]string, 0, len(handlers.Handlers))
+			for id, handler := range handlers.Handlers {
+				if len(id) > maxLen {
+					maxLen = len(id)
+				}
+				list = append(list, [2]string{id, lineDesc(*handler.(*pipeline.Line))})
+			}
+			layout := fmt.Sprintf("%%-%ds%%v\n", maxLen+5)
+			for _, h := range list {
+				fmt.Printf(layout, h[0], h[1])
+			}
+		},
+	}
+
+	var rootCmd = &cobra.Command{
+		Use: "misa [-c config path]",
+	}
 	homeDir, err := homedir.Dir()
 	if err != nil {
 		log.Fatalf("get home dir failed: %v", err)
@@ -71,5 +96,15 @@ func main() {
 	defaultConfPath := homeDir + "/.misa/conf.json"
 	cmdRun.Flags().StringVarP(&configPath, "conf", "c", defaultConfPath, "request data")
 	rootCmd.AddCommand(cmdRun)
+	rootCmd.AddCommand(cmdLs)
 	rootCmd.Execute()
+}
+
+func lineDesc(line pipeline.Line) string {
+	descs := make([]string, 0, len(line.Pipes))
+	for i, pipe := range line.Pipes {
+		desc := fmt.Sprintf("%d.%v", i+1, pipe.Conf.Desc)
+		descs = append(descs, desc)
+	}
+	return strings.Join(descs, " -> ")
 }
