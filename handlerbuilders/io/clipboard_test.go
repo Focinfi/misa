@@ -2,6 +2,7 @@ package io
 
 import (
 	"context"
+	"os"
 	"reflect"
 	"testing"
 
@@ -10,6 +11,9 @@ import (
 )
 
 func TestReaderClipboard_Handle(t *testing.T) {
+	if v := os.Getenv("TEST_DESKTOP"); v != "TRUE" {
+		t.Skip()
+	}
 	tests := []struct {
 		name        string
 		toCopy      string
@@ -45,6 +49,9 @@ func TestReaderClipboard_Handle(t *testing.T) {
 }
 
 func TestWriterClipboard_Handle(t *testing.T) {
+	if v := os.Getenv("TEST_DESKTOP"); v != "TRUE" {
+		t.Skip()
+	}
 	tests := []struct {
 		name        string
 		reqRes      *pipeline.HandleRes
