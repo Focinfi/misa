@@ -3,6 +3,7 @@ module github.com/Focinfi/misa
 go 1.12
 
 require (
+	github.com/0xAX/notificator v0.0.0-20191016112426-3962a5ea8da1
 	github.com/Focinfi/go-pipeline v1.0.0
 	github.com/araddon/dateparse v0.0.0-20190622164848-0fb0a474d195
 	github.com/d5/tengo v1.24.8

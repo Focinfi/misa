@@ -1,5 +1,36 @@
 [
   {
+    "id": "parse-json",
+    "conf": [
+      {
+        "desc": "parse json string",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "parser-json"
+      }
+    ]
+  },
+  {
+    "id": "notify-desktop",
+    "conf": [
+      {
+        "desc": "parse param in json",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "notify desktop",
+        "timeout": 500,
+        "required": true,
+        "handler_builder_name": "notify-desktop",
+        "handler_builder_conf": {
+          "app_name": "misa cli"
+        }
+      }
+    ]
+  },
+  {
     "id": "join-newline",
     "conf": [
       {
@@ -54,17 +85,6 @@
         "timeout": 1000,
         "required": true,
         "handler_builder_name": "io-writer-stdout"
-      }
-    ]
-  },
-  {
-    "id": "parse-json",
-    "conf": [
-      {
-        "desc": "parse json string",
-        "timeout": 100,
-        "required": true,
-        "handler_builder_name": "parser-json"
       }
     ]
   },

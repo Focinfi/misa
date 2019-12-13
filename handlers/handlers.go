@@ -29,3 +29,8 @@ func InitHandlers(confPath string) error {
 	Handlers = handlers
 	return nil
 }
+
+func AddHandler(confJSON string) error {
+	// copy old handlers
+	return nil
+}

@@ -3,6 +3,7 @@ package handlerbuilders
 import (
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlerbuilders/generators"
+	"github.com/Focinfi/misa/handlerbuilders/gui"
 	"github.com/Focinfi/misa/handlerbuilders/interpreters"
 	"github.com/Focinfi/misa/handlerbuilders/io"
 	"github.com/Focinfi/misa/handlerbuilders/iterators"
@@ -71,7 +72,7 @@ var DefaultBuilders = pipeline.MapHandlerBuilderGetter{
 	}),
 
 	// string
-	"string-splitter": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+	"string-split": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
 		return strings.BuildSplitter(conf)
 	}),
 	"string-join": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
@@ -84,5 +85,10 @@ var DefaultBuilders = pipeline.MapHandlerBuilderGetter{
 	// net
 	"net-http": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
 		return net.DefaultHTTP
+	}),
+
+	// gui
+	"notify-desktop": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+		return gui.BuildDesktopNotificator(conf)
 	}),
 }
