@@ -30,7 +30,10 @@ func NewMapper(interpreterName, mapScript string) (*Mapper, error) {
 		},
 		RtVarName: "mapped",
 	}
-	interpreter := builder.Build(meta.ToMap())
+	interpreter, err := builder.Build(meta.ToMap())
+	if err != nil {
+		return nil, err
+	}
 	return &Mapper{
 		InterpreterName: interpreterName,
 		Script:          mapScript,

@@ -7,14 +7,14 @@ import (
 )
 
 var all = map[string]pipeline.HandlerBuilder{
-	"tengo": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
+	"tengo": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
 		return &Tengo{
 			Meta: Meta{
 				Script:     conf["script"].(string),
 				InitVarMap: conf["init_var_map"].(map[string]interface{}),
 				RtVarName:  conf["rt_var_name"].(string),
 			},
-		}
+		}, nil
 	}),
 }
 

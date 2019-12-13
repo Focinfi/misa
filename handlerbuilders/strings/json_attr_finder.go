@@ -38,19 +38,18 @@ func NewFinderJSONAttr(attrPath string) (*FinderJSONAttr, error) {
 		RtVarName: "found",
 	}
 
-	interpreter := interpreterBuilder.Build(meta.ToMap())
+	interpreter, err := interpreterBuilder.Build(meta.ToMap())
+	if err != nil {
+		return nil, err
+	}
 	return &FinderJSONAttr{
 		AttrPath:         attrPath,
 		interpreterTengo: interpreter,
 	}, nil
 }
 
-func BuildFinderJSONAttr(conf map[string]interface{}) pipeline.Handler {
-	finder, err := NewFinderJSONAttr(fmt.Sprint(conf["attr_path"]))
-	if err != nil {
-		panic(err)
-	}
-	return finder
+func BuildFinderJSONAttr(conf map[string]interface{}) (pipeline.Handler, error) {
+	return NewFinderJSONAttr(fmt.Sprint(conf["attr_path"]))
 }
 
 func (finder FinderJSONAttr) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {

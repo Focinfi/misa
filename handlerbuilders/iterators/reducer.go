@@ -31,7 +31,10 @@ func NewReducer(interpreterName, reduceScript string) (*Reducer, error) {
 		},
 		RtVarName: "reduced",
 	}
-	interpreter := builder.Build(meta.ToMap())
+	interpreter, err := builder.Build(meta.ToMap())
+	if err != nil {
+		return nil, err
+	}
 	return &Reducer{
 		InterpreterName: interpreterName,
 		Script:          reduceScript,

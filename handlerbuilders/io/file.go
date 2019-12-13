@@ -13,10 +13,10 @@ type WriterFile struct {
 	Path string `json:"path"`
 }
 
-func BuildFile(conf map[string]interface{}) pipeline.Handler {
+func BuildFile(conf map[string]interface{}) (pipeline.Handler, error) {
 	return &WriterFile{
 		Path: conf["path"].(string),
-	}
+	}, nil
 }
 
 func (file WriterFile) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {

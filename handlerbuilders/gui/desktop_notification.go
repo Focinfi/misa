@@ -25,10 +25,10 @@ func NewDesktopNotificator(appName string, defaultIconPath string) *DesktopNotif
 	}
 }
 
-func BuildDesktopNotificator(conf map[string]interface{}) pipeline.Handler {
+func BuildDesktopNotificator(conf map[string]interface{}) (pipeline.Handler, error) {
 	appName := fmt.Sprint(conf["app_name"])
 	defaultIconPath := fmt.Sprint(conf["default_icon_path"])
-	return NewDesktopNotificator(appName, defaultIconPath)
+	return NewDesktopNotificator(appName, defaultIconPath), nil
 }
 
 func (n DesktopNotificator) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {

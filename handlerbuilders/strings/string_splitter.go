@@ -2,6 +2,7 @@ package strings
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/Focinfi/go-pipeline"
@@ -12,8 +13,8 @@ type Splitter struct {
 	Separator string `json:"separator"`
 }
 
-func BuildSplitter(conf map[string]interface{}) pipeline.Handler {
-	return Splitter{Separator: conf["separator"].(string)}
+func BuildSplitter(conf map[string]interface{}) (pipeline.Handler, error) {
+	return Splitter{Separator: fmt.Sprint(conf["separator"])}, nil
 }
 
 func (str Splitter) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {

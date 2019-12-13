@@ -30,7 +30,10 @@ func NewSelector(interpreterName, detectionScript string) (*Selector, error) {
 		},
 		RtVarName: "selected",
 	}
-	interpreter := builder.Build(meta.ToMap())
+	interpreter, err := builder.Build(meta.ToMap())
+	if err != nil {
+		return nil, err
+	}
 	return &Selector{
 		InterpreterName: interpreterName,
 		Script:          detectionScript,
