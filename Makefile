@@ -7,4 +7,7 @@ test: modvendor
 modvendor:
 	GO111MODULE=on GOPROXY=https://goproxy.cn go mod vendor
 
+gitpush: test
+	git push
+
 default: reinstall_cmd_misa

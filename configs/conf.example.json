@@ -277,14 +277,31 @@
           "attr_path": "body"
         }
       },
+      [
+        {
+          "desc": "find first item.conf.timeout",
+          "timeout": 100,
+          "required": true,
+          "handler_builder_name": "finder-json-attr",
+          "handler_builder_conf": {
+           "attr_path": "[0].conf[0].timeout"
+          }
+        },
+        {
+          "desc": "find second item.conf.timeout",
+          "timeout": 100,
+          "required": true,
+          "handler_builder_name": "finder-json-attr",
+          "handler_builder_conf": {
+            "attr_path": "[1].conf[0].timeout"
+          }
+        }
+      ],
       {
-        "desc": "find first item.id",
+        "desc": "sum",
         "timeout": 100,
         "required": true,
-        "handler_builder_name": "finder-json-attr",
-        "handler_builder_conf": {
-          "attr_path": "[0].id"
-        }
+        "ref_handler_id": "sum-int"
       }
     ]
   }

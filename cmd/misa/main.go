@@ -63,7 +63,7 @@ func main() {
 			log.Println(string(p))
 		},
 	}
-	cmdRun.Flags().StringVarP(&requestData, "data", "r", "", "request data")
+	cmdRun.Flags().StringVarP(&requestData, "data", "d", "", "request data")
 	cmdRun.Flags().StringVarP(&requestMeta, "meta", "m", "{}", "request meta")
 	cmdRun.Flags().BoolVarP(&verbosely, "verbosely", "v", false, "print every step result")
 
