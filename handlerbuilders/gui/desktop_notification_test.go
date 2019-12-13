@@ -2,6 +2,7 @@ package gui
 
 import (
 	"context"
+	"os"
 	"reflect"
 	"testing"
 
@@ -9,6 +10,10 @@ import (
 )
 
 func TestDesktopNotificator_Handle(t *testing.T) {
+	if v := os.Getenv("TEST_DESKTOP"); v != "TRUE" {
+		t.Skip()
+	}
+
 	type fields struct {
 		AppName         string
 		DefaultIconPath string
