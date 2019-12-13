@@ -18,7 +18,7 @@ type ReaderClipboard struct{}
 func (cb ReaderClipboard) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	cbData, err := clipboard.ReadAll()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("clipboard read err: %v", err)
 	}
 
 	respRes = &pipeline.HandleRes{}
@@ -46,7 +46,7 @@ func (cb WriterClipboard) Handle(ctx context.Context, reqRes *pipeline.HandleRes
 		return nil, err
 	}
 	if err := clipboard.WriteAll(fmt.Sprint(reqRes.Data)); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("clipboard write err: %v", err)
 	}
 	respRes.Status = pipeline.HandleStatusOK
 	return respRes, nil

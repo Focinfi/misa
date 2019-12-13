@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 )
 
@@ -15,12 +16,11 @@ func parseConfJSON(confPath string) ([]pipeConf, error) {
 
 	b, err := ioutil.ReadFile(confPath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("read conf file err: %v", err)
 	}
 
 	if err := json.Unmarshal(b, &pipeConfs); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unmarshal conf file in json format err: %v", err)
 	}
-
 	return pipeConfs, nil
 }

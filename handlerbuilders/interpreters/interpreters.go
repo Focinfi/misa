@@ -1,6 +1,10 @@
 package interpreters
 
-import "github.com/Focinfi/go-pipeline"
+import (
+	"fmt"
+
+	"github.com/Focinfi/go-pipeline"
+)
 
 var all = map[string]pipeline.HandlerBuilder{
 	"tengo": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) pipeline.Handler {
@@ -17,4 +21,12 @@ var all = map[string]pipeline.HandlerBuilder{
 func GetHandlerBuilderOK(name string) (pipeline.HandlerBuilder, bool) {
 	hb, ok := all[name]
 	return hb, ok
+}
+
+func GetHandlerBuilder(name string) (pipeline.HandlerBuilder, error) {
+	hb, ok := GetHandlerBuilderOK(name)
+	if !ok {
+		return nil, fmt.Errorf(`interpreter("%v") not found`, name)
+	}
+	return hb, nil
 }

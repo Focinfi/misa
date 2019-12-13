@@ -134,11 +134,3 @@ func lineDesc(line pipeline.Line) []string {
 	}
 	return descs
 }
-
-func whiteSpaceByLen(l int) string {
-	runes := make([]rune, 0, l)
-	for i := 0; i < l; i++ {
-		runes = append(runes, ' ')
-	}
-	return string(runes)
-}

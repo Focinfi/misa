@@ -2,10 +2,7 @@ package iterators
 
 import (
 	"context"
-	"errors"
 	"fmt"
-
-	"github.com/Focinfi/misa/handlerbuilders/utils"
 
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlerbuilders/interpreters"
@@ -22,9 +19,9 @@ type Selector struct {
 }
 
 func NewSelector(interpreterName, detectionScript string) (*Selector, error) {
-	builder, ok := interpreters.GetHandlerBuilderOK(interpreterName)
-	if !ok {
-		return nil, errors.New("unsupported interpreter")
+	builder, err := interpreters.GetHandlerBuilder(interpreterName)
+	if err != nil {
+		return nil, err
 	}
 	meta := interpreters.Meta{
 		Script: buildDetectionScript(interpreterName, detectionScript),
@@ -59,7 +56,7 @@ func (selector Selector) Handle(ctx context.Context, reqRes *pipeline.HandleRes)
 		}
 
 		if reqRes.Data != nil {
-			items, err := utils.AynTypeToSlice(reqRes.Data)
+			items, err := InterfaceToSlice(reqRes.Data)
 			if err != nil {
 				return nil, err
 			}

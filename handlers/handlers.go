@@ -22,7 +22,7 @@ func InitHandlers(confPath string) error {
 		}
 		line, err := pipeline.NewLineByJSON(string(conf.Conf), handlerbuilders.DefaultBuilders, handlers)
 		if err != nil {
-			return fmt.Errorf("new line with conf id(%s) by json failed, err: %v", conf.ID, err)
+			return fmt.Errorf("new line with conf id(%s) by json err: %v", conf.ID, err)
 		}
 		handlers[conf.ID] = line
 	}

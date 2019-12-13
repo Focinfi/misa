@@ -2,12 +2,10 @@ package iterators
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlerbuilders/interpreters"
-	"github.com/Focinfi/misa/handlerbuilders/utils"
 )
 
 const reduceScriptTemplateTengo = `
@@ -22,9 +20,9 @@ type Reducer struct {
 }
 
 func NewReducer(interpreterName, reduceScript string) (*Reducer, error) {
-	builder, ok := interpreters.GetHandlerBuilderOK(interpreterName)
-	if !ok {
-		return nil, errors.New("unsupported interpreter")
+	builder, err := interpreters.GetHandlerBuilder(interpreterName)
+	if err != nil {
+		return nil, err
 	}
 	meta := interpreters.Meta{
 		Script: buildReduceScript(interpreterName, reduceScript),
@@ -59,7 +57,7 @@ func (selector Reducer) Handle(ctx context.Context, reqRes *pipeline.HandleRes) 
 		}
 
 		if reqRes.Data != nil {
-			items, err := utils.AynTypeToSlice(reqRes.Data)
+			items, err := InterfaceToSlice(reqRes.Data)
 			if err != nil {
 				return nil, err
 			}

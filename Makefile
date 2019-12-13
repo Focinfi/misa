@@ -10,4 +10,7 @@ modvendor:
 gitpush: test
 	git push
 
+testHttp:
+	misa run get-first-pipeline-id -d '{"method": "GET", "url": "https://raw.githubusercontent.com/Focinfi/misa/master/configs/conf.example.json"}'
+
 default: reinstall_cmd_misa

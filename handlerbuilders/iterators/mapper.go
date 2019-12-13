@@ -2,12 +2,10 @@ package iterators
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlerbuilders/interpreters"
-	"github.com/Focinfi/misa/handlerbuilders/utils"
 )
 
 const mapScriptTemplateTengo = `
@@ -21,9 +19,9 @@ type Mapper struct {
 }
 
 func NewMapper(interpreterName, mapScript string) (*Mapper, error) {
-	builder, ok := interpreters.GetHandlerBuilderOK(interpreterName)
-	if !ok {
-		return nil, errors.New("unsupported interpreter")
+	builder, err := interpreters.GetHandlerBuilder(interpreterName)
+	if err != nil {
+		return nil, err
 	}
 	meta := interpreters.Meta{
 		Script: buildMapScript(interpreterName, mapScript),
@@ -58,7 +56,7 @@ func (selector Mapper) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (
 		}
 
 		if reqRes.Data != nil {
-			items, err := utils.AynTypeToSlice(reqRes.Data)
+			items, err := InterfaceToSlice(reqRes.Data)
 			if err != nil {
 				return nil, err
 			}

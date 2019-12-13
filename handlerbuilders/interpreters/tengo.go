@@ -3,6 +3,7 @@ package interpreters
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/Focinfi/go-pipeline"
 	"github.com/d5/tengo/script"
@@ -17,12 +18,12 @@ type Tengo struct {
 func (tengo *Tengo) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	compiled, err := tengo.compile()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("interpreter tengo compile err: %v", err)
 	}
 	compiled = compiled.Clone()
 	if reqRes != nil && reqRes.Data != nil {
 		if err := tengo.setVar(compiled, reqRes.Data); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("interpreter tengo set var err: %v", err)
 		}
 	}
 	if err := compiled.RunContext(ctx); err != nil {

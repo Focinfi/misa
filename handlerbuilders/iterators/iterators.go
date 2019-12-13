@@ -3,7 +3,6 @@ package iterators
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 
 	"github.com/Focinfi/misa/handlerbuilders/utils"
@@ -22,7 +21,7 @@ func NewIterator(t, interpreterName, script string) (pipeline.Handler, error) {
 	case "reduce":
 		return NewReducer(interpreterName, script)
 	default:
-		return nil, errors.New("unsupported iterator type")
+		return nil, fmt.Errorf("unsupported iterator type: %v", t)
 	}
 }
 

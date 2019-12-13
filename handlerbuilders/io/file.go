@@ -2,6 +2,7 @@ package io
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 
 	"github.com/Focinfi/go-pipeline"
@@ -32,7 +33,7 @@ func (file WriterFile) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (
 				return nil, err
 			}
 			if err := ioutil.WriteFile(file.Path, []byte(content), 0644); err != nil {
-				return nil, err
+				return nil, fmt.Errorf("write into file err: %v", err)
 			}
 		}
 	}

@@ -31,7 +31,7 @@ func AynTypeToSlice(data interface{}) ([]interface{}, error) {
 		v = reflect.ValueOf(data).Elem()
 	}
 	if t != reflect.Slice {
-		return nil, errors.New("request data must a slice")
+		return nil, errors.New("must a slice")
 	}
 
 	items := make([]interface{}, v.Len())

@@ -30,7 +30,7 @@ func (str Join) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes
 	}
 	inData, err := utils.AynTypeToSlice(reqRes.Data)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("request data type wrong: %v", err)
 	}
 	items := make([]string, 0, len(inData))
 	for _, data := range inData {
