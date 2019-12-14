@@ -19,7 +19,7 @@ func init() {
 }
 
 type SeparatorConf struct {
-	Type      string `json:"type" validate:"required"`
+	Type      string `json:"type" desc:"enum: join|split" validate:"required"`
 	Separator string `json:"separator" validate:"required"`
 }
 

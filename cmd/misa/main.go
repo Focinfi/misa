@@ -9,6 +9,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Focinfi/misa/handlerbuilders"
+
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlers"
 	"github.com/jedib0t/go-pretty/table"
@@ -98,6 +100,48 @@ func main() {
 		},
 	}
 
+	var cmdBLs = &cobra.Command{
+		Use:   "bls",
+		Short: "list all handler builders",
+		Run: func(cmd *cobra.Command, args []string) {
+			t := table.NewWriter()
+			t.SetTitle("Misa Handler Builders")
+
+			style := table.StyleBold
+			style.Options.SeparateRows = true
+			t.SetStyle(style)
+
+			t.SetOutputMirror(os.Stdout)
+			t.AppendHeader(table.Row{"Builder", "Field Name", "Field Type", "Description", "Validation"})
+
+			names := make([]string, 0, len(handlerbuilders.Builders))
+			for id := range handlerbuilders.Builders {
+				names = append(names, id)
+			}
+			sort.Strings(names)
+			for _, name := range names {
+				builder := handlerbuilders.Builders[name]
+				params := builder.ConfParams()
+				rows := make([]table.Row, 0, len(params))
+				for param, definition := range params {
+					rows = append(rows, table.Row{
+						"", param, definition.Type, definition.Desc, definition.Validation,
+					})
+				}
+				if len(rows) == 0 {
+					rows = []table.Row{{name}}
+				} else {
+					sort.Slice(rows, func(i, j int) bool {
+						return rows[i][1].(string) < rows[j][1].(string)
+					})
+					rows[0][0] = name
+				}
+				t.AppendRows(rows)
+			}
+			t.Render()
+		},
+	}
+
 	var rootCmd = &cobra.Command{
 		Use: "misa [-c config path]",
 	}
@@ -109,6 +153,7 @@ func main() {
 	cmdRun.Flags().StringVarP(&configPath, "conf", "c", defaultConfPath, "request data")
 	rootCmd.AddCommand(cmdRun)
 	rootCmd.AddCommand(cmdLs)
+	rootCmd.AddCommand(cmdBLs)
 	rootCmd.Execute()
 }
 

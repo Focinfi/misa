@@ -21,7 +21,7 @@ func init() {
 }
 
 type Conf struct {
-	Type            string `json:"type" desc:"iterator type" validate:"required"`
+	Type            string `json:"type" desc:"enum: map|reduce|select" validate:"required"`
 	InterpreterName string `json:"interpreter_name" desc:"interpreter name" validate:"required"`
 	Script          string `json:"script" desc:"iterator script" validate:"required"`
 }
