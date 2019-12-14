@@ -2,6 +2,7 @@ package handlerbuilders
 
 import (
 	"github.com/Focinfi/go-pipeline"
+	"github.com/Focinfi/misa/handlerbuilders/confparam"
 	"github.com/Focinfi/misa/handlerbuilders/generators"
 	"github.com/Focinfi/misa/handlerbuilders/gui"
 	"github.com/Focinfi/misa/handlerbuilders/interpreters"
@@ -12,83 +13,68 @@ import (
 	"github.com/Focinfi/misa/handlerbuilders/strings"
 )
 
-var DefaultBuilders = pipeline.MapHandlerBuilderGetter{
-	// generators
-	"generator-int-range": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return generators.DefaultIntRange, nil
-	}),
-	"generator-time-range": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return generators.DefaultTimeRange, nil
-	}),
+type Builder interface {
+	Build() (pipeline.Handler, error)
+	ConfParams() map[string]confparam.ConfParam
+	InitByConf(conf map[string]interface{}) error
+}
 
+type TypedBuilderMap map[string]Builder
+
+func (m TypedBuilderMap) GetHandlerBuilderOK(id string) (pipeline.HandlerBuilder, bool) {
+	tb, ok := m[id]
+	if !ok {
+		return nil, false
+	}
+	return pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
+		if err := tb.InitByConf(conf); err != nil {
+			return nil, err
+		}
+		return tb.Build()
+	}), true
+}
+
+func (m TypedBuilderMap) GetConfParamsOK(id string) (*confparam.ConfParam, bool) {
+	return nil, false
+}
+
+type SingletonBuilder struct {
+	Handler pipeline.Handler
+}
+
+func (b SingletonBuilder) Build() (pipeline.Handler, error)           { return b.Handler, nil }
+func (SingletonBuilder) ConfParams() map[string]confparam.ConfParam   { return nil }
+func (SingletonBuilder) InitByConf(conf map[string]interface{}) error { return nil }
+
+var Builders = TypedBuilderMap{
 	// interpreters
-	"interpreter-tengo": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return &interpreters.Tengo{
-			Meta: interpreters.Meta{
-				Script:     conf["script"].(string),
-				InitVarMap: conf["init_var_map"].(map[string]interface{}),
-				RtVarName:  conf["rt_var_name"].(string),
-			},
-		}, nil
-	}),
-
+	"interpreter": &interpreters.Conf{},
+	// generators
+	"generator-int-range":  SingletonBuilder{Handler: generators.DefaultIntRange},
+	"generator-time-range": SingletonBuilder{Handler: generators.DefaultTimeRange},
 	// io
-	"io-reader-clipboard": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return io.DefaultReaderClipboard, nil
-	}),
-	"io-writer-clipboard": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return io.DefaultWriterClipboard, nil
-	}),
-	"io-writer-stdout": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return io.DefaultWriterStdOut, nil
-	}),
-	"io-writer-file": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return io.BuildFile(conf)
-	}),
-
+	"io-reader-clipboard": SingletonBuilder{Handler: io.DefaultReaderClipboard},
+	"io-writer-clipboard": SingletonBuilder{Handler: io.DefaultWriterClipboard},
+	"io-writer-stdout":    SingletonBuilder{Handler: io.DefaultWriterStdOut},
+	"io-writer-file":      &io.WriterFile{},
 	// parser
-	"parser-unix": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return parsers.DefaultUnixParser, nil
-	}),
-	"parser-json": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return parsers.DefaultParserJSON, nil
-	}),
+	"parser-unix": SingletonBuilder{Handler: parsers.DefaultUnixParser},
+	"parser-json": SingletonBuilder{Handler: parsers.DefaultParserJSON},
 
 	// iterators
-	"iterator": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return iterators.BuildIterator(conf)
-	}),
-	"iterator-map": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return iterators.BuildIteratorByType("map", conf)
-	}),
-	"iterator-reduce": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return iterators.BuildIteratorByType("reduce", conf)
-	}),
-	"iterator-select": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return iterators.BuildIteratorByType("select", conf)
-	}),
-	"iterators": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return iterators.BuildIterators(conf)
-	}),
+	"iterator":        &iterators.Conf{},
+	"iterator-map":    &iterators.Conf{Type: "map"},
+	"iterator-reduce": &iterators.Conf{Type: "reduce"},
+	"iterator-select": &iterators.Conf{Type: "select"},
 
 	// string
-	"string-split": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return strings.BuildSplitter(conf)
-	}),
-	"string-join": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return strings.BuildJoin(conf)
-	}),
-	"finder-json-attr": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return strings.BuildFinderJSONAttr(conf)
-	}),
+	"string-split":     &strings.SeparatorConf{Type: "split"},
+	"string-join":      &strings.SeparatorConf{Type: "join"},
+	"finder-json-attr": &strings.FinderJSONAttr{},
 
 	// net
-	"net-http": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return net.DefaultHTTP, nil
-	}),
+	"net-http": SingletonBuilder{Handler: net.DefaultHTTP},
 
 	// gui
-	"notify-desktop": pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		return gui.BuildDesktopNotificator(conf)
-	}),
+	"notify-desktop": &gui.DesktopNotificator{},
 }

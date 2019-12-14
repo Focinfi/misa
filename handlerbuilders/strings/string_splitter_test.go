@@ -43,8 +43,8 @@ func TestString_Handle(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			str := Splitter{
-				Separator: tt.fields.Separator,
+			str := Split{
+				SeparatorConf: SeparatorConf{Separator: tt.fields.Separator},
 			}
 			gotRespRes, err := str.Handle(tt.args.ctx, tt.args.reqRes)
 			if (err != nil) != tt.wantErr {

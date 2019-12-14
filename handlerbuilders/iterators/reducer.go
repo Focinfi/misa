@@ -14,31 +14,26 @@ import("enum").each(arr, func(key, value) { reduced = %s })
 `
 
 type Reducer struct {
-	InterpreterName string           `json:"interpreter_name"`
-	Script          string           `json:"script"`
-	interpreter     pipeline.Handler `json:"-"`
+	Conf
+	interpreter pipeline.Handler `json:"-"`
 }
 
-func NewReducer(interpreterName, reduceScript string) (*Reducer, error) {
-	builder, err := interpreters.GetHandlerBuilder(interpreterName)
-	if err != nil {
-		return nil, err
-	}
-	meta := interpreters.Meta{
-		Script: buildReduceScript(interpreterName, reduceScript),
+func NewReducer(conf Conf) (*Reducer, error) {
+	iteratorConf := interpreters.Conf{
+		Type:   conf.InterpreterName,
+		Script: buildReduceScript(conf.InterpreterName, conf.Script),
 		InitVarMap: map[string]interface{}{
 			"arr": []interface{}{},
 		},
 		RtVarName: "reduced",
 	}
-	interpreter, err := builder.Build(meta.ToMap())
+	interpreter, err := iteratorConf.Build()
 	if err != nil {
 		return nil, err
 	}
 	return &Reducer{
-		InterpreterName: interpreterName,
-		Script:          reduceScript,
-		interpreter:     interpreter,
+		Conf:        conf,
+		interpreter: interpreter,
 	}, nil
 }
 

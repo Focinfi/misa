@@ -11,8 +11,20 @@ import (
 )
 
 type Tengo struct {
-	Meta
-	compiled *script.Compiled `json:"-"`
+	Conf
+	compiled *script.Compiled `json:"-" validate:"-"`
+}
+
+func NewTengo(conf Conf) (*Tengo, error) {
+	t := Tengo{
+		Conf: conf,
+	}
+	compiled, err := t.compile()
+	if err != nil {
+		return nil, err
+	}
+	t.compiled = compiled
+	return &t, nil
 }
 
 func (tengo *Tengo) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {

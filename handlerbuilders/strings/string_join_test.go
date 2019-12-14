@@ -46,7 +46,7 @@ func TestJoin_Handle(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			str := Join{
-				Separator: tt.fields.Separator,
+				SeparatorConf: SeparatorConf{Separator: tt.fields.Separator},
 			}
 			gotRespRes, err := str.Handle(tt.args.ctx, tt.args.reqRes)
 			if (err != nil) != tt.wantErr {

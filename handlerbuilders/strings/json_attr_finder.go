@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/Focinfi/misa/handlerbuilders/confparam"
+
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlerbuilders/interpreters"
 	"github.com/Focinfi/misa/handlerbuilders/utils"
@@ -15,22 +17,40 @@ const (
 	tengoScriptTmplArray  = `found := import("json").decode(data)%s`
 )
 
+var finderJSONAttrParams = make(map[string]confparam.ConfParam)
+
+func init() {
+	params, err := confparam.GetConfParams(FinderJSONAttr{})
+	if err != nil {
+		panic(err)
+	}
+	finderJSONAttrParams = params
+}
+
 type FinderJSONAttr struct {
-	AttrPath         string `json:"attr_path"`
+	AttrPath         string `json:"attr_path" desc:"attribute path" validate:"required"`
 	interpreterTengo pipeline.Handler
 }
 
-func NewFinderJSONAttr(attrPath string) (*FinderJSONAttr, error) {
-	interpreterBuilder, ok := interpreters.GetHandlerBuilderOK("tengo")
-	if !ok {
-		return nil, fmt.Errorf("interpreter tengo is unsupported")
-	}
+func (finder *FinderJSONAttr) Build() (pipeline.Handler, error) {
+	return NewFinderJSONAttr(finder.AttrPath)
+}
 
+func (finder *FinderJSONAttr) ConfParams() map[string]confparam.ConfParam {
+	return finderJSONAttrParams
+}
+
+func (finder *FinderJSONAttr) InitByConf(conf map[string]interface{}) error {
+	return utils.JSONUnmarshalWithMap(conf, finder)
+}
+
+func NewFinderJSONAttr(attrPath string) (*FinderJSONAttr, error) {
 	scriptTmpl := tengoScriptTmplObject
 	if strings.HasPrefix(attrPath, "[") {
 		scriptTmpl = tengoScriptTmplArray
 	}
-	meta := interpreters.Meta{
+	tengoConf := interpreters.Conf{
+		Type:   "tengo",
 		Script: fmt.Sprintf(scriptTmpl, attrPath),
 		InitVarMap: map[string]interface{}{
 			"data": "",
@@ -38,7 +58,7 @@ func NewFinderJSONAttr(attrPath string) (*FinderJSONAttr, error) {
 		RtVarName: "found",
 	}
 
-	interpreter, err := interpreterBuilder.Build(meta.ToMap())
+	interpreter, err := tengoConf.Build()
 	if err != nil {
 		return nil, err
 	}

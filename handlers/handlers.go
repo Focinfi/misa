@@ -20,7 +20,7 @@ func InitHandlers(confPath string) error {
 		if _, ok := handlers[conf.ID]; ok {
 			return fmt.Errorf("handler with id(%s) already exists", conf.ID)
 		}
-		line, err := pipeline.NewLineByJSON(string(conf.Conf), handlerbuilders.DefaultBuilders, handlers)
+		line, err := pipeline.NewLineByJSON(string(conf.Conf), handlerbuilders.Builders, handlers)
 		if err != nil {
 			return fmt.Errorf("new line with conf id(%s) by json err: %v", conf.ID, err)
 		}

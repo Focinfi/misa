@@ -2,7 +2,6 @@ package io
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Focinfi/go-pipeline"
 )
@@ -16,7 +15,6 @@ type WriterStdOut struct {
 func (stdout WriterStdOut) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	respRes = &pipeline.HandleRes{}
 	if reqRes != nil {
-		fmt.Println(reqRes.Data)
 		respRes, err = reqRes.Copy()
 		if err != nil {
 			return nil, err

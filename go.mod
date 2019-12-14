@@ -4,10 +4,11 @@ go 1.12
 
 require (
 	github.com/0xAX/notificator v0.0.0-20191016112426-3962a5ea8da1
-	github.com/Focinfi/go-pipeline v1.1.1
+	github.com/Focinfi/go-pipeline v1.1.2
 	github.com/araddon/dateparse v0.0.0-20190622164848-0fb0a474d195
 	github.com/d5/tengo v1.24.8
 	github.com/go-openapi/strfmt v0.19.4 // indirect
+	github.com/go-playground/validator/v10 v10.0.1
 	github.com/go-vgo/robotgo v0.0.0-20191205185624-edede45aab61
 	github.com/goby-lang/goby v0.1.11 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible

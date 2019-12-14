@@ -57,7 +57,10 @@ func TestNewReducer(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewReducer(tt.args.interpreterName, tt.args.script)
+			got, err := NewReducer(Conf{
+				InterpreterName: tt.args.interpreterName,
+				Script:          tt.args.script,
+			})
 			if err != nil {
 				t.Fatal(err)
 			}

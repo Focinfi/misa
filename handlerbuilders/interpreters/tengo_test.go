@@ -84,7 +84,7 @@ func TestTengo_Handle(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tengo := &Tengo{
-				Meta: Meta{
+				Conf: Conf{
 					Script:     tt.fields.Script,
 					RtVarName:  tt.fields.ReturnVar,
 					InitVarMap: tt.fields.InitVarMap,

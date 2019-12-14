@@ -32,7 +32,7 @@ func main() {
 			if err := handlers.InitHandlers(configPath); err != nil {
 				log.Fatalf("init pipelines failed: %v", err)
 			}
-			h, ok := handlers.Handlers.GetOK(args[0])
+			h, ok := handlers.Handlers.GetHandlerOK(args[0])
 			if !ok {
 				log.Fatalf("pipeline[%v] not found", args[0])
 			}

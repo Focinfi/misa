@@ -4,14 +4,40 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Focinfi/misa/handlerbuilders/utils"
+
+	"github.com/Focinfi/misa/handlerbuilders/confparam"
+
 	"github.com/0xAX/notificator"
 	"github.com/Focinfi/go-pipeline"
 )
 
+var desktopNotificatorParams = make(map[string]confparam.ConfParam)
+
+func init() {
+	params, err := confparam.GetConfParams(DesktopNotificator{})
+	if err != nil {
+		panic(err)
+	}
+	desktopNotificatorParams = params
+}
+
 type DesktopNotificator struct {
-	AppName         string `json:"app_name"`
-	DefaultIconPath string `json:"default_icon_path"`
+	AppName         string `json:"app_name" validate:"required"`
+	DefaultIconPath string `json:"default_icon_path" validate:"-"`
 	notificator     *notificator.Notificator
+}
+
+func (n DesktopNotificator) Build() (pipeline.Handler, error) {
+	return NewDesktopNotificator(n.AppName, n.DefaultIconPath), nil
+}
+
+func (n DesktopNotificator) ConfParams() map[string]confparam.ConfParam {
+	return desktopNotificatorParams
+}
+
+func (n *DesktopNotificator) InitByConf(conf map[string]interface{}) error {
+	return utils.JSONUnmarshalWithMap(conf, n)
 }
 
 func NewDesktopNotificator(appName string, defaultIconPath string) *DesktopNotificator {

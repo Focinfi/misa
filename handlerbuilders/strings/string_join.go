@@ -10,11 +10,7 @@ import (
 )
 
 type Join struct {
-	Separator string `json:"separator"`
-}
-
-func BuildJoin(conf map[string]interface{}) (pipeline.Handler, error) {
-	return Join{Separator: fmt.Sprint(conf["separator"])}, nil
+	SeparatorConf
 }
 
 func (str Join) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {

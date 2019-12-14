@@ -61,7 +61,10 @@ func TestNewMapper(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewMapper(tt.args.interpreterName, tt.args.script)
+			got, err := NewMapper(Conf{
+				InterpreterName: tt.args.interpreterName,
+				Script:          tt.args.script,
+			})
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -13,31 +13,26 @@ mapped := import("enum").map(arr, func(key, value){ return %s })
 `
 
 type Mapper struct {
-	InterpreterName string           `json:"interpreter_name"`
-	Script          string           `json:"script"`
-	interpreter     pipeline.Handler `json:"-"`
+	Conf
+	interpreter pipeline.Handler `json:"-"`
 }
 
-func NewMapper(interpreterName, mapScript string) (*Mapper, error) {
-	builder, err := interpreters.GetHandlerBuilder(interpreterName)
-	if err != nil {
-		return nil, err
-	}
-	meta := interpreters.Meta{
-		Script: buildMapScript(interpreterName, mapScript),
+func NewMapper(conf Conf) (*Mapper, error) {
+	iteratorConf := interpreters.Conf{
+		Type:   conf.InterpreterName,
+		Script: buildMapScript(conf.InterpreterName, conf.Script),
 		InitVarMap: map[string]interface{}{
 			"arr": []interface{}{},
 		},
 		RtVarName: "mapped",
 	}
-	interpreter, err := builder.Build(meta.ToMap())
+	interpreter, err := iteratorConf.Build()
 	if err != nil {
 		return nil, err
 	}
 	return &Mapper{
-		InterpreterName: interpreterName,
-		Script:          mapScript,
-		interpreter:     interpreter,
+		Conf:        conf,
+		interpreter: interpreter,
 	}, nil
 }
 
