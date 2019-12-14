@@ -2,7 +2,6 @@ package handlerbuilders
 
 import (
 	"github.com/Focinfi/go-pipeline"
-	"github.com/Focinfi/misa/handlerbuilders/confparam"
 	"github.com/Focinfi/misa/handlerbuilders/generators"
 	"github.com/Focinfi/misa/handlerbuilders/gui"
 	"github.com/Focinfi/misa/handlerbuilders/interpreters"
@@ -11,12 +10,11 @@ import (
 	"github.com/Focinfi/misa/handlerbuilders/net"
 	"github.com/Focinfi/misa/handlerbuilders/parsers"
 	"github.com/Focinfi/misa/handlerbuilders/strings"
+	"github.com/Focinfi/misa/handlerbuilders/utils"
 )
 
 type Builder interface {
 	Build() (pipeline.Handler, error)
-	ConfParams() map[string]confparam.ConfParam
-	InitByConf(conf map[string]interface{}) error
 }
 
 type TypedBuilderMap map[string]Builder
@@ -27,24 +25,20 @@ func (m TypedBuilderMap) GetHandlerBuilderOK(id string) (pipeline.HandlerBuilder
 		return nil, false
 	}
 	return pipeline.HandlerBuilderFunc(func(conf map[string]interface{}) (pipeline.Handler, error) {
-		if err := tb.InitByConf(conf); err != nil {
-			return nil, err
+		if len(conf) > 0 {
+			if err := utils.JSONUnmarshalWithMap(conf, tb); err != nil {
+				return nil, err
+			}
 		}
 		return tb.Build()
 	}), true
-}
-
-func (m TypedBuilderMap) GetConfParamsOK(id string) (*confparam.ConfParam, bool) {
-	return nil, false
 }
 
 type SingletonBuilder struct {
 	Handler pipeline.Handler
 }
 
-func (b SingletonBuilder) Build() (pipeline.Handler, error)           { return b.Handler, nil }
-func (SingletonBuilder) ConfParams() map[string]confparam.ConfParam   { return nil }
-func (SingletonBuilder) InitByConf(conf map[string]interface{}) error { return nil }
+func (b SingletonBuilder) Build() (pipeline.Handler, error) { return b.Handler, nil }
 
 var Builders = TypedBuilderMap{
 	// interpreters

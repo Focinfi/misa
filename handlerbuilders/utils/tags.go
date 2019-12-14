@@ -12,6 +12,9 @@ type FieldDefinition struct {
 
 func GetTypeDefinitions(obj interface{}, tags []string) []FieldDefinition {
 	t := reflect.TypeOf(obj)
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
 	fields := make([]FieldDefinition, 0)
 	for i := 0; i < t.NumField(); i++ {
 		f := t.Field(i)

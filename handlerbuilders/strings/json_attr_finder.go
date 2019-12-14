@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Focinfi/misa/handlerbuilders/confparam"
-
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlerbuilders/interpreters"
 	"github.com/Focinfi/misa/handlerbuilders/utils"
@@ -17,16 +15,6 @@ const (
 	tengoScriptTmplArray  = `found := import("json").decode(data)%s`
 )
 
-var finderJSONAttrParams = make(map[string]confparam.ConfParam)
-
-func init() {
-	params, err := confparam.GetConfParams(FinderJSONAttr{})
-	if err != nil {
-		panic(err)
-	}
-	finderJSONAttrParams = params
-}
-
 type FinderJSONAttr struct {
 	AttrPath         string `json:"attr_path" desc:"json value path, e.g. a.b[0].c" validate:"required"`
 	interpreterTengo pipeline.Handler
@@ -34,14 +22,6 @@ type FinderJSONAttr struct {
 
 func (finder *FinderJSONAttr) Build() (pipeline.Handler, error) {
 	return NewFinderJSONAttr(finder.AttrPath)
-}
-
-func (finder *FinderJSONAttr) ConfParams() map[string]confparam.ConfParam {
-	return finderJSONAttrParams
-}
-
-func (finder *FinderJSONAttr) InitByConf(conf map[string]interface{}) error {
-	return utils.JSONUnmarshalWithMap(conf, finder)
 }
 
 func NewFinderJSONAttr(attrPath string) (*FinderJSONAttr, error) {

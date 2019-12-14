@@ -5,21 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/Focinfi/misa/handlerbuilders/confparam"
-
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/handlerbuilders/utils"
 )
-
-var writerFileConfParams = map[string]confparam.ConfParam{}
-
-func init() {
-	params, err := confparam.GetConfParams(WriterFile{})
-	if err != nil {
-		panic(err)
-	}
-	writerFileConfParams = params
-}
 
 type WriterFile struct {
 	Path string `json:"path"`
@@ -27,14 +15,6 @@ type WriterFile struct {
 
 func (file WriterFile) Build() (pipeline.Handler, error) {
 	return WriterFile{Path: file.Path}, nil
-}
-
-func (file WriterFile) ConfParams() map[string]confparam.ConfParam {
-	return writerFileConfParams
-}
-
-func (file *WriterFile) InitByConf(conf map[string]interface{}) error {
-	return utils.JSONUnmarshalWithMap(conf, file)
 }
 
 func (file WriterFile) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {

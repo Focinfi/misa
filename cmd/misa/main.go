@@ -9,6 +9,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Focinfi/misa/handlerbuilders/confparam"
+
 	"github.com/Focinfi/misa/handlerbuilders"
 
 	"github.com/Focinfi/go-pipeline"
@@ -121,7 +123,11 @@ func main() {
 			sort.Strings(names)
 			for _, name := range names {
 				builder := handlerbuilders.Builders[name]
-				params := builder.ConfParams()
+				params, err := confparam.GetConfParams(builder)
+				if err != nil {
+					fmt.Println("get conf params failed:", err)
+					os.Exit(1)
+				}
 				rows := make([]table.Row, 0, len(params))
 				for param, definition := range params {
 					rows = append(rows, table.Row{
