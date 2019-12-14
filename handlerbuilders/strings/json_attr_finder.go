@@ -28,7 +28,7 @@ func init() {
 }
 
 type FinderJSONAttr struct {
-	AttrPath         string `json:"attr_path" desc:"attribute path" validate:"required"`
+	AttrPath         string `json:"attr_path" desc:"json value path, e.g. a.b[0].c" validate:"required"`
 	interpreterTengo pipeline.Handler
 }
 
