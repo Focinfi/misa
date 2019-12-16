@@ -48,10 +48,6 @@ func NewFinderJSONAttr(attrPath string) (*FinderJSONAttr, error) {
 	}, nil
 }
 
-func BuildFinderJSONAttr(conf map[string]interface{}) (pipeline.Handler, error) {
-	return NewFinderJSONAttr(fmt.Sprint(conf["attr_path"]))
-}
-
 func (finder FinderJSONAttr) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	inRes := &pipeline.HandleRes{}
 	var inData string
