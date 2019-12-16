@@ -17,9 +17,9 @@ type Builder interface {
 	Build() (pipeline.Handler, error)
 }
 
-type TypedBuilderMap map[string]Builder
+type BuilderMap map[string]Builder
 
-func (m TypedBuilderMap) GetHandlerBuilderOK(id string) (pipeline.HandlerBuilder, bool) {
+func (m BuilderMap) GetHandlerBuilderOK(id string) (pipeline.HandlerBuilder, bool) {
 	tb, ok := m[id]
 	if !ok {
 		return nil, false
@@ -40,7 +40,7 @@ type SingletonBuilder struct {
 
 func (b SingletonBuilder) Build() (pipeline.Handler, error) { return b.Handler, nil }
 
-var Builders = TypedBuilderMap{
+var Builders = BuilderMap{
 	// interpreters
 	"interpreter": &interpreters.Conf{},
 	// generators

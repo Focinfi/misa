@@ -60,6 +60,28 @@ func Test_pipelineMap_UpdatePipeline(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			name: "cycle deps self",
+			args: args{
+				id: "parse-json",
+				confJSON: `
+	[
+      {
+        "desc": "parse json string",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "parser-json"
+      },
+      {
+        "desc": "notify-desktop",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      }
+    ]`,
+			},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

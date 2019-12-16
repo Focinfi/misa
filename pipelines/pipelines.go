@@ -86,8 +86,13 @@ func (m *pipelineMap) UpdatePipeline(id, confJSON string) error {
 	if !ok {
 		return fmt.Errorf("pipeline with id(%#v) not found", id)
 	}
+	newPipelineMap := make(pipelineMap, len(*m)+1)
+	for id, handler := range *m {
+		newPipelineMap[id] = handler
+	}
+	delete(newPipelineMap, id)
 
-	updated, err := pipeline.NewLineByJSON(confJSON, handlerbuilders.Builders, m)
+	updated, err := pipeline.NewLineByJSON(confJSON, handlerbuilders.Builders, newPipelineMap)
 	if err != nil {
 		return fmt.Errorf("add pipeline with conf id by json err: %v", err)
 	}
