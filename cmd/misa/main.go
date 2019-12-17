@@ -9,9 +9,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Focinfi/misa/handlerbuilders/confparam"
+	"github.com/Focinfi/misa/builders/confparam"
 
-	"github.com/Focinfi/misa/handlerbuilders"
+	"github.com/Focinfi/misa/builders"
 
 	"github.com/Focinfi/go-pipeline"
 	"github.com/Focinfi/misa/pipelines"
@@ -117,13 +117,13 @@ func main() {
 			t.SetOutputMirror(os.Stdout)
 			t.AppendHeader(table.Row{"Builder", "Field Name", "Field Type", "Description", "Validation"})
 
-			names := make([]string, 0, len(handlerbuilders.Builders))
-			for id := range handlerbuilders.Builders {
+			names := make([]string, 0, len(builders.Builders))
+			for id := range builders.Builders {
 				names = append(names, id)
 			}
 			sort.Strings(names)
 			for _, name := range names {
-				builder := handlerbuilders.Builders[name]
+				builder := builders.Builders[name]
 				params, err := confparam.GetConfParams(builder)
 				if err != nil {
 					fmt.Println("get conf params failed:", err)

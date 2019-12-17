@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/Focinfi/go-pipeline"
-	"github.com/Focinfi/misa/handlerbuilders"
+	"github.com/Focinfi/misa/builders"
 )
 
 var mux sync.Mutex
@@ -50,7 +50,7 @@ func InitLines(confPath string) (*lines, error) {
 		if _, ok := m[conf.ID]; ok {
 			return nil, fmt.Errorf("pipeline with id(%s) already exists", conf.ID)
 		}
-		line, err := pipeline.NewLineByJSON(string(conf.Conf), handlerbuilders.Builders, m)
+		line, err := pipeline.NewLineByJSON(string(conf.Conf), builders.Builders, m)
 		if err != nil {
 			return nil, fmt.Errorf("new pipeline with conf id(%s) by json err: %v", conf.ID, err)
 		}
@@ -72,7 +72,7 @@ func InitLines(confPath string) (*lines, error) {
 }
 
 func (l *lines) AddByConfJSON(id, confJSON string) error {
-	line, err := pipeline.NewLineByJSON(confJSON, handlerbuilders.Builders, l)
+	line, err := pipeline.NewLineByJSON(confJSON, builders.Builders, l)
 	if err != nil {
 		return fmt.Errorf("add pipeline with conf id by json err: %v", err)
 	}
@@ -109,7 +109,7 @@ func (l *lines) UpdateByConfJSON(id, confJSON string) error {
 	}
 	delete(newLineMap, id)
 
-	updated, err := pipeline.NewLineByJSON(confJSON, handlerbuilders.Builders, newLineMap)
+	updated, err := pipeline.NewLineByJSON(confJSON, builders.Builders, newLineMap)
 	if err != nil {
 		return fmt.Errorf("add pipeline with conf id by json err: %v", err)
 	}

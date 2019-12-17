@@ -9,6 +9,7 @@ require (
 	github.com/d5/tengo v1.24.8
 	github.com/go-openapi/strfmt v0.19.4 // indirect
 	github.com/go-playground/validator/v10 v10.0.1
+	github.com/go-redis/redis/v7 v7.0.0-beta.4
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/go-vgo/robotgo v0.0.0-20191205185624-edede45aab61
 	github.com/goby-lang/goby v0.1.11 // indirect

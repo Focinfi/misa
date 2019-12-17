@@ -335,8 +335,8 @@
         "ref_handler_id": "parse-json"
       },
       {
-        "desc": "create mysql instance",
-        "timeout": 1000,
+        "desc": "create mysql client",
+        "timeout": 5000,
         "required": true,
         "handler_builder_name": "mysql",
         "handler_builder_conf": {
@@ -344,6 +344,26 @@
           "max_idle_conns": 10,
           "max_open_conns": 30,
           "conn_max_life_second": 100
+        }
+      }
+    ]
+  },
+  {
+    "id": "redis-local",
+    "conf": [
+      {
+        "desc": "parse json into map",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "create redis client",
+        "timeout": 2000,
+        "required": true,
+        "handler_builder_name": "redis",
+        "handler_builder_conf": {
+          "addr": "127.0.0.1:6379"
         }
       }
     ]
