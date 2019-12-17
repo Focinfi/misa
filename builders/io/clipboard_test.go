@@ -11,7 +11,7 @@ import (
 )
 
 func TestReaderClipboard_Handle(t *testing.T) {
-	if v := os.Getenv("TEST_DESKTOP"); v != "TRUE" {
+	if v := os.Getenv("CI_TEST_SKIP"); v == "TRUE" {
 		t.Skip()
 	}
 	tests := []struct {
@@ -49,7 +49,7 @@ func TestReaderClipboard_Handle(t *testing.T) {
 }
 
 func TestWriterClipboard_Handle(t *testing.T) {
-	if v := os.Getenv("TEST_DESKTOP"); v != "TRUE" {
+	if v := os.Getenv("CI_TEST_SKIP"); v == "TRUE" {
 		t.Skip()
 	}
 	tests := []struct {

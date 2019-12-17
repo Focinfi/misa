@@ -1,11 +1,15 @@
 package pipelines
 
 import (
+	"os"
 	"testing"
 )
 
 func Test_initHandlers(t *testing.T) {
-	pipelines, err := InitLines("../configs/conf.example.json")
+	if os.Getenv("CI_TEST_SKIP") == "TRUE" {
+		t.Skip()
+	}
+	pipelines, err := InitLinesByFile("../configs/conf.example.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -86,7 +90,38 @@ func Test_pipelineMap_UpdatePipeline(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lines, err := InitLines("../configs/conf.example.json")
+			lines, err := InitLinesByConfs([]pipeConf{
+				{
+					ID: "parse-json",
+					Conf: []byte(`[
+      {
+        "desc": "parse json string",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "parser-json"
+      }
+    ]`),
+				},
+				{
+					ID: "notify-desktop",
+					Conf: []byte(`[
+      {
+        "desc": "parse param in json",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "notify desktop",
+        "timeout": 500,
+        "required": true,
+        "handler_builder_name": "notify-desktop",
+        "handler_builder_conf": {
+          "app_name": "misa cli"
+        }
+      }]`),
+				},
+			})
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -112,7 +147,7 @@ func Test_pipelines_Delete(t *testing.T) {
 		{
 			name: "normal",
 			args: args{
-				id: "get-first-pipeline-id",
+				id: "foo",
 			},
 			wantErr: false,
 		},
@@ -126,7 +161,30 @@ func Test_pipelines_Delete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p, err := InitLines("../configs/conf.example.json")
+			p, err := InitLinesByConfs([]pipeConf{
+				{
+					ID: "parse-json",
+					Conf: []byte(`[
+      {
+        "desc": "parse json string",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "parser-json"
+      }
+    ]`),
+				},
+				{
+					ID: "foo",
+					Conf: []byte(`[
+		{
+          "desc": "parse json",
+		  "timeout": 1000,
+		  "required": true,
+		  "ref_handler_id": "parse-json"
+		}
+	]`),
+				},
+			})
 			if err != nil {
 				t.Fatal(err)
 			}

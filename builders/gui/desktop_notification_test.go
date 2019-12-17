@@ -10,7 +10,7 @@ import (
 )
 
 func TestDesktopNotificator_Handle(t *testing.T) {
-	if v := os.Getenv("TEST_DESKTOP"); v != "TRUE" {
+	if v := os.Getenv("CI_TEST_SKIP"); v == "TRUE" {
 		t.Skip()
 	}
 

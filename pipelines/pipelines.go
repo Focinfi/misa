@@ -39,12 +39,16 @@ func (l lines) GetDep(id string) (*Dep, bool) {
 	return dep, ok
 }
 
-func InitLines(confPath string) (*lines, error) {
+func InitLinesByFile(confPath string) (*lines, error) {
 	confs, err := parseConfJSON(confPath)
 	if err != nil {
 		return nil, err
 	}
 
+	return InitLinesByConfs(confs)
+}
+
+func InitLinesByConfs(confs []pipeConf) (*lines, error) {
 	m := make(LineMap)
 	for i, conf := range confs {
 		if _, ok := m[conf.ID]; ok {

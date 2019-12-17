@@ -33,7 +33,7 @@ func main() {
 		Short: "run a pipeline",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			lines, err := pipelines.InitLines(configPath)
+			lines, err := pipelines.InitLinesByFile(configPath)
 			if err != nil {
 				log.Fatalf("init pipelines failed: %v", err)
 			}
@@ -75,7 +75,7 @@ func main() {
 		Use:   "ls",
 		Short: "list all pipelines",
 		Run: func(cmd *cobra.Command, args []string) {
-			lines, err := pipelines.InitLines(configPath)
+			lines, err := pipelines.InitLinesByFile(configPath)
 			if err != nil {
 				log.Fatalf("init pipelines failed: %v", err)
 			}
