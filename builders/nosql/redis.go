@@ -55,7 +55,7 @@ func (r Redis) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes 
 
 		if reqRes.Data != nil {
 			args := reqRes.Data.([]interface{})
-			result, err := r.client.Do(args...).String()
+			result, err := r.client.Do(args...).Result()
 			if err != nil {
 				return nil, err
 			}
