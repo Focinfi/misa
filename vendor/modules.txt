@@ -30,6 +30,8 @@ github.com/go-playground/locales/currency
 github.com/go-playground/universal-translator
 # github.com/go-playground/validator/v10 v10.0.1
 github.com/go-playground/validator/v10
+# github.com/go-sql-driver/mysql v1.4.1
+github.com/go-sql-driver/mysql
 # github.com/go-stack/stack v1.8.0
 github.com/go-stack/stack
 # github.com/go-vgo/robotgo v0.0.0-20191205185624-edede45aab61
@@ -60,3 +62,5 @@ go.mongodb.org/mongo-driver/bson/bsonrw
 go.mongodb.org/mongo-driver/x/bsonx/bsoncore
 # golang.org/x/sys v0.0.0-20191029155521-f43be2a4598c
 golang.org/x/sys/windows
+# google.golang.org/appengine v1.6.5
+google.golang.org/appengine/cloudsql

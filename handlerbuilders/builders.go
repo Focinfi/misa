@@ -9,6 +9,7 @@ import (
 	"github.com/Focinfi/misa/handlerbuilders/iterators"
 	"github.com/Focinfi/misa/handlerbuilders/net"
 	"github.com/Focinfi/misa/handlerbuilders/parsers"
+	"github.com/Focinfi/misa/handlerbuilders/sql"
 	"github.com/Focinfi/misa/handlerbuilders/strings"
 	"github.com/Focinfi/misa/handlerbuilders/utils"
 )
@@ -71,4 +72,7 @@ var Builders = BuilderMap{
 
 	// gui
 	"notify-desktop": &gui.DesktopNotificator{},
+
+	// sql
+	"mysql": &sql.MySQL{},
 }

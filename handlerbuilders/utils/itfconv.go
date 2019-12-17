@@ -24,6 +24,10 @@ func AnyTypeToString(src interface{}) (string, error) {
 }
 
 func AynTypeToSlice(data interface{}) ([]interface{}, error) {
+	if data == nil {
+		return []interface{}{}, nil
+	}
+
 	t := reflect.TypeOf(data).Kind()
 	v := reflect.ValueOf(data)
 	if t == reflect.Ptr {

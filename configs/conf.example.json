@@ -324,5 +324,28 @@
         "ref_handler_id": "sum-int"
       }
     ]
+  },
+  {
+    "id": "mysql-endless_music",
+    "conf": [
+      {
+        "desc": "parse json into map",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "create mysql instance",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "mysql",
+        "handler_builder_conf": {
+          "dsn": "root:root@tcp(127.0.0.1:3306)/endless_music",
+          "max_idle_conns": 10,
+          "max_open_conns": 30,
+          "conn_max_life_second": 100
+        }
+      }
+    ]
   }
 ]
