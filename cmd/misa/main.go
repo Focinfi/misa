@@ -33,10 +33,11 @@ func main() {
 		Short: "run a pipeline",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := pipelines.InitHandlers(configPath); err != nil {
+			lines, err := pipelines.InitLines(configPath)
+			if err != nil {
 				log.Fatalf("init pipelines failed: %v", err)
 			}
-			h, ok := pipelines.PipelineMap.GetHandlerOK(args[0])
+			h, ok := lines.GetHandlerOK(args[0])
 			if !ok {
 				log.Fatalf("pipeline[%v] not found", args[0])
 			}
@@ -53,10 +54,9 @@ func main() {
 
 			var (
 				resp interface{}
-				err  error
 			)
 			if verbosely {
-				resp, err = h.(pipelines.Pipeline).Handler.(*pipeline.Line).HandleVerbosely(context.Background(), req)
+				resp, err = h.(*pipeline.Line).HandleVerbosely(context.Background(), req)
 			} else {
 				resp, err = h.Handle(context.Background(), req)
 			}
@@ -75,7 +75,8 @@ func main() {
 		Use:   "ls",
 		Short: "list all pipelines",
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := pipelines.InitHandlers(configPath); err != nil {
+			lines, err := pipelines.InitLines(configPath)
+			if err != nil {
 				log.Fatalf("init pipelines failed: %v", err)
 			}
 			t := table.NewWriter()
@@ -86,15 +87,15 @@ func main() {
 			t.SetStyle(style)
 
 			t.SetOutputMirror(os.Stdout)
-			t.AppendHeader(table.Row{"Pipeline", "Steps"})
+			t.AppendHeader(table.Row{"Line", "Steps"})
 
-			ids := make([]string, 0, len(*pipelines.PipelineMap))
-			for id := range *pipelines.PipelineMap {
+			ids := make([]string, 0, len(lines.LineMap))
+			for id := range lines.LineMap {
 				ids = append(ids, id)
 			}
 			sort.Strings(ids)
 			for _, id := range ids {
-				handler := (*pipelines.PipelineMap)[id]
+				handler := lines.LineMap[id]
 				desc := strings.Join(lineDesc(*handler.Handler.(*pipeline.Line)), "\n")
 				t.AppendRow(table.Row{id, desc})
 			}

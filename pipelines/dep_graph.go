@@ -15,6 +15,19 @@ type Dep struct {
 	Deped []*Dep
 }
 
+type Deps []*Dep
+
+func (deps Deps) IDs() []string {
+	ids := make([]string, 0, len(deps))
+	for _, dep := range deps {
+		if dep == nil {
+			continue
+		}
+		ids = append(ids, dep.ID)
+	}
+	return ids
+}
+
 func (dep Dep) HasDepID(id string) ([]string, bool) {
 	for _, d := range dep.Deps {
 		if d != nil {
@@ -70,9 +83,9 @@ func FindDeps(handler pipeline.Handler, depMap map[string]*Dep) ([]*Dep, error) 
 	return deps, nil
 }
 
-func BuildDepMap(m pipelineMap) (map[string]*Dep, error) {
+func BuildDepMap(m map[string]Line) (map[string]*Dep, error) {
 	depMap := make(map[string]*Dep, len(m))
-	pipelines := make([]Pipeline, 0, len(m))
+	pipelines := make([]Line, 0, len(m))
 	for _, line := range m {
 		pipelines = append(pipelines, line)
 	}
