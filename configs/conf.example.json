@@ -35,7 +35,7 @@
     "conf": [
       {
         "desc": "join slice with newline",
-        "timeout": 100,
+        "timeout": 10000,
         "required": true,
         "handler_builder_name": "string-join",
         "handler_builder_conf": {
@@ -364,6 +364,69 @@
         "handler_builder_name": "redis",
         "handler_builder_conf": {
           "addr": "127.0.0.1:6379"
+        }
+      }
+    ]
+  },
+  {
+    "id": "parse-xlsx",
+    "conf": [
+      {
+        "desc": "parse json into map",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "parse xlsx file",
+        "timeout": 100000,
+        "required": true,
+        "handler_builder_name": "parser-xlsx"
+      }
+    ]
+  },
+  {
+    "id": "parse-bank-xlsx",
+    "conf": [
+      {
+        "desc": "parse xlsx",
+        "timeout": 20000,
+        "required": true,
+        "ref_handler_id": "parse-xlsx"
+      },
+      {
+        "desc": "get bank no and bank name",
+        "timeout": 20000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "{ bank_no: import(\"text\").replace(value.行号, \" \", \"\", -1), bank_name: import(\"text\").replace(value.行名, \" \", \"\", -1) }"
+        }
+      },
+      {
+        "desc": "build sql",
+        "timeout": 20000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "\"INSERT INTO t_bank_code(`F_bank_code`, `F_bank_name`) VALUES('\" + value.bank_no + \"', '\" + value.bank_name + \"');\"\n"
+        }
+      },
+      {
+        "desc": "join",
+        "timeout": 10000,
+        "required": true,
+        "ref_handler_id": "join-newline"
+      },
+      {
+        "desc": "write to file",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "io-writer-file",
+        "handler_builder_conf": {
+          "path": "/Users/Antony/Documents/g7pay/sql/service-area/bank-info.sql"
         }
       }
     ]

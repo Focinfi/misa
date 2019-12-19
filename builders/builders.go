@@ -55,7 +55,8 @@ var Builders = BuilderMap{
 	"io-writer-file":      &io.WriterFile{},
 	// parser
 	"parser-unix": SingletonBuilder{Handler: parsers.DefaultUnixParser},
-	"parser-json": SingletonBuilder{Handler: parsers.DefaultParserJSON},
+	"parser-json": SingletonBuilder{Handler: parsers.DefaultJSONParser},
+	"parser-xlsx": SingletonBuilder{Handler: parsers.DefaultXLSXParser},
 
 	// iterators
 	"iterator":        &iterators.Conf{},

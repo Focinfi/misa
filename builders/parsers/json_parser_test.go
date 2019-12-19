@@ -15,14 +15,14 @@ func TestParserJSON_Handle(t *testing.T) {
 	}
 	tests := []struct {
 		name        string
-		p           ParserJSON
+		p           JSONParser
 		args        args
 		wantRespRes *pipeline.HandleRes
 		wantErr     bool
 	}{
 		{
 			name: "object",
-			p:    ParserJSON{},
+			p:    JSONParser{},
 			args: args{
 				ctx: context.Background(),
 				reqRes: &pipeline.HandleRes{
@@ -42,14 +42,14 @@ func TestParserJSON_Handle(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParserJSON{}
+			p := JSONParser{}
 			gotRespRes, err := p.Handle(tt.args.ctx, tt.args.reqRes)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ParserJSON.Handle() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("JSONParser.Handle() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotRespRes, tt.wantRespRes) {
-				t.Errorf("ParserJSON.Handle() = %#v, want %#v", gotRespRes, tt.wantRespRes)
+				t.Errorf("JSONParser.Handle() = %#v, want %#v", gotRespRes, tt.wantRespRes)
 			}
 		})
 	}

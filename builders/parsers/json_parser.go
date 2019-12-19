@@ -8,11 +8,11 @@ import (
 	"github.com/Focinfi/misa/builders/utils"
 )
 
-var DefaultParserJSON = ParserJSON{}
+var DefaultJSONParser = JSONParser{}
 
-type ParserJSON struct{}
+type JSONParser struct{}
 
-func (ParserJSON) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
+func (JSONParser) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	respRes = &pipeline.HandleRes{}
 	if reqRes != nil {
 		respRes, err = reqRes.Copy()
