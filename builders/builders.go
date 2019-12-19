@@ -63,6 +63,7 @@ var Builders = BuilderMap{
 	"iterator-map":    &iterators.Conf{Type: "map"},
 	"iterator-reduce": &iterators.Conf{Type: "reduce"},
 	"iterator-select": &iterators.Conf{Type: "select"},
+	"iterator-chunk":  &iterators.Conf{Type: "chunk"},
 
 	// string
 	"string-split":     &strings.SeparatorConf{Type: "split"},

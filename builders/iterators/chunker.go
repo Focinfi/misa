@@ -8,45 +8,45 @@ import (
 	"github.com/Focinfi/misa/builders/interpreters"
 )
 
-const mapScriptTemplateTengo = `
-mapped := import("enum").map(arr, func(key, value){ return %s })
+const chunkScriptTemplateTengo = `
+chunked := import("enum").chunk(arr, %s)
 `
 
-type Mapper struct {
+type Chunker struct {
 	Conf
 	interpreter pipeline.Handler `json:"-"`
 }
 
-func NewMapper(conf Conf) (*Mapper, error) {
+func NewChunker(conf Conf) (*Chunker, error) {
 	iteratorConf := interpreters.Conf{
 		Type:   conf.InterpreterName,
-		Script: buildMapScript(conf.InterpreterName, conf.Script),
+		Script: buildChunkScript(conf.InterpreterName, conf.Script),
 		InitVarMap: map[string]interface{}{
 			"arr": []interface{}{},
 		},
-		RtVarName: "mapped",
+		RtVarName: "chunked",
 	}
 	interpreter, err := iteratorConf.Build()
 	if err != nil {
 		return nil, err
 	}
-	return &Mapper{
+	return &Chunker{
 		Conf:        conf,
 		interpreter: interpreter,
 	}, nil
 }
 
-func buildMapScript(interpreterName, mapScript string) string {
+func buildChunkScript(interpreterName, chunkScript string) string {
 	switch interpreterName {
 	case "tengo":
-		return fmt.Sprintf(mapScriptTemplateTengo, mapScript)
+		return fmt.Sprintf(chunkScriptTemplateTengo, chunkScript)
 	}
 	return ""
 }
 
-func (selector Mapper) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
+func (selector Chunker) Handle(ctx context.Context, reqRes *pipeline.HandleRes) (respRes *pipeline.HandleRes, err error) {
 	inRes := &pipeline.HandleRes{}
-	var inArr []interface{}
+	var inArr interface{}
 	if reqRes != nil {
 		inRes, err = reqRes.Copy()
 		if err != nil {

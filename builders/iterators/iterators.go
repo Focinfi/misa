@@ -24,6 +24,8 @@ func NewIterator(conf Conf) (pipeline.Handler, error) {
 		return NewMapper(conf)
 	case "reduce":
 		return NewReducer(conf)
+	case "chunk":
+		return NewChunker(conf)
 	default:
 		return nil, fmt.Errorf("unsupported iterator type: %v", conf.Type)
 	}
