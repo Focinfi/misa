@@ -450,26 +450,5 @@
         }
       }
     ]
-  },
-  {
-    "id": "parse-xlsx-test",
-    "conf": [
-      {
-        "desc": "parse xlsx",
-        "timeout": 20000,
-        "required": true,
-        "ref_handler_id": "parse-xlsx"
-      },
-      {
-        "desc": "parse map",
-        "timeout": 10000,
-        "required": true,
-        "handler_builder_name": "iterator-map",
-        "handler_builder_conf": {
-          "interpreter_name": "tengo",
-          "script": "len(value)"
-        }
-      }
-    ]
   }
 ]
