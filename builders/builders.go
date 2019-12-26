@@ -9,6 +9,7 @@ import (
 	"github.com/Focinfi/misa/builders/iterators"
 	"github.com/Focinfi/misa/builders/net"
 	"github.com/Focinfi/misa/builders/nosql"
+	"github.com/Focinfi/misa/builders/os"
 	"github.com/Focinfi/misa/builders/parsers"
 	"github.com/Focinfi/misa/builders/sql"
 	"github.com/Focinfi/misa/builders/strings"
@@ -54,9 +55,10 @@ var Builders = BuilderMap{
 	"io-writer-stdout":    SingletonBuilder{Handler: io.DefaultWriterStdOut},
 	"io-writer-file":      &io.WriterFile{},
 	// parser
-	"parser-unix": SingletonBuilder{Handler: parsers.DefaultUnixParser},
-	"parser-json": SingletonBuilder{Handler: parsers.DefaultJSONParser},
-	"parser-xlsx": SingletonBuilder{Handler: parsers.DefaultXLSXParser},
+	"parser-unix":   SingletonBuilder{Handler: parsers.DefaultUnixParser},
+	"parser-json":   SingletonBuilder{Handler: parsers.DefaultJSONParser},
+	"parser-xlsx":   SingletonBuilder{Handler: parsers.DefaultXLSXParser},
+	"parser-base64": SingletonBuilder{Handler: parsers.DefaultBase64Parser},
 
 	// iterators
 	"iterator":        &iterators.Conf{},
@@ -81,4 +83,7 @@ var Builders = BuilderMap{
 
 	// nosql
 	"redis": &nosql.Redis{},
+
+	// os
+	"os-cmd-exec": &os.CmdExec{},
 }

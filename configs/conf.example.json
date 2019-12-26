@@ -4,9 +4,20 @@
     "conf": [
       {
         "desc": "parse json string",
-        "timeout": 100,
+        "timeout": 100000,
         "required": true,
         "handler_builder_name": "parser-json"
+      }
+    ]
+  },
+  {
+    "id": "parse-base64",
+    "conf": [
+      {
+        "desc": "parse base64",
+        "timeout": 100000,
+        "required": true,
+        "handler_builder_name": "parser-base64"
       }
     ]
   },
@@ -447,6 +458,68 @@
         "handler_builder_name": "io-writer-file",
         "handler_builder_conf": {
           "path": "/Users/Antony/Documents/g7pay/sql/service-area/bank-info.sql"
+        }
+      }
+    ]
+  },
+  {
+    "id": "download-pic",
+    "conf": [
+      {
+        "desc": "parse request json param",
+        "timeout": 100,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "do http request",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "net-http"
+      },
+      {
+        "desc": "get response body",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "finder-json-attr",
+        "handler_builder_conf": {
+          "attr_path": "body"
+        }
+      },
+      {
+        "desc": "get pic",
+        "timeout": 100,
+        "required": true,
+        "handler_builder_name": "finder-json-attr",
+        "handler_builder_conf": {
+          "attr_path": "pic"
+        }
+      },
+      {
+        "desc": "base64 decode",
+        "timeout": 1000,
+        "required": true,
+        "ref_handler_id": "parse-base64"
+      },
+      {
+        "desc": "save to file",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "io-writer-file",
+        "handler_builder_conf": {
+          "path": "/Users/Antony/Tmp/pic.jpg"
+        }
+      },
+      {
+        "desc": "open pic file",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "os-cmd-exec",
+        "handler_builder_conf": {
+          "name": "open",
+          "args": [
+            "/Users/Antony/Tmp/pic.jpg"
+          ]
         }
       }
     ]
