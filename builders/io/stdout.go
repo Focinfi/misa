@@ -2,6 +2,7 @@ package io
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Focinfi/go-pipeline"
 )
@@ -18,6 +19,10 @@ func (stdout WriterStdOut) Handle(ctx context.Context, reqRes *pipeline.HandleRe
 		respRes, err = reqRes.Copy()
 		if err != nil {
 			return nil, err
+		}
+
+		if respRes.Data != nil {
+			fmt.Println(respRes.Data)
 		}
 	}
 	respRes.Status = pipeline.HandleStatusOK

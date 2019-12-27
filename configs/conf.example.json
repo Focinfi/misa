@@ -1,5 +1,16 @@
 [
   {
+    "id": "format-xml",
+    "conf": [
+      {
+        "desc": "format xml",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "formatter-xml"
+      }
+    ]
+  },
+  {
     "id": "parse-json",
     "conf": [
       {
@@ -18,6 +29,17 @@
         "timeout": 100000,
         "required": true,
         "handler_builder_name": "parser-base64"
+      }
+    ]
+  },
+  {
+    "id": "unquote",
+    "conf": [
+      {
+        "desc": "unquote quoted string",
+        "timeout": 100000,
+        "required": true,
+        "handler_builder_name": "string-unquote"
       }
     ]
   },
@@ -147,6 +169,12 @@
         "timeout": 100,
         "required": true,
         "ref_handler_id": "parse-unix"
+      },
+      {
+        "desc": "write to clipboard",
+        "timeout": 1000,
+        "required": true,
+        "ref_handler_id": "write-to-clipboard"
       }
     ]
   },
@@ -522,6 +550,78 @@
           ]
         }
       }
+    ]
+  },
+  {
+    "id": "format-xml-from-json",
+    "conf": [
+      {
+        "desc": "read json from clipboard",
+        "timeout": 1000,
+        "required": true,
+        "ref_handler_id": "read-from-clipboard"
+      },
+      {
+        "desc": "clean all newlines",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "string-replace",
+        "handler_builder_conf": {
+          "old": "\n",
+          "new": "",
+          "n": -1
+        }
+      },
+      {
+        "desc": "get msg from json",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "finder-json-attr",
+        "handler_builder_conf": {
+          "attr_path": "msg"
+        }
+      },
+      {
+        "desc": "clean code",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "string-regexp-all-replace",
+        "handler_builder_conf": {
+          "expr": "^[\\s|\\t|result\\-utf8\\:]*\\[(.*)\\][\\s|\\t]*$",
+          "replacement": "$1"
+        }
+      },
+      {
+        "desc": "replace GBK to UTF-8",
+        "timeout": 1000,
+        "required": true,
+        "handler_builder_name": "string-replace",
+        "handler_builder_conf": {
+          "old": "GBK",
+          "new": "UTF-8",
+          "n": -1
+        }
+      },
+      {
+        "desc": "format xml",
+        "timeout": 1000,
+        "required": true,
+        "ref_handler_id": "format-xml"
+      },
+      [
+        {
+          "desc": "write to clipboard",
+          "timeout": 10000,
+          "required": true,
+          "ref_handler_id": "write-to-clipboard"
+        },
+        {
+          "desc": "print",
+          "timeout": 10000,
+          "required": true,
+          "ref_handler_id": "print"
+        }
+      ]
     ]
   }
 ]

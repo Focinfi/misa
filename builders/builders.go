@@ -2,6 +2,7 @@ package builders
 
 import (
 	"github.com/Focinfi/go-pipeline"
+	"github.com/Focinfi/misa/builders/formatters"
 	"github.com/Focinfi/misa/builders/generators"
 	"github.com/Focinfi/misa/builders/gui"
 	"github.com/Focinfi/misa/builders/interpreters"
@@ -46,19 +47,25 @@ func (b SingletonBuilder) Build() (pipeline.Handler, error) { return b.Handler, 
 var Builders = BuilderMap{
 	// interpreters
 	"interpreter": &interpreters.Conf{},
+
 	// generators
 	"generator-int-range":  SingletonBuilder{Handler: generators.DefaultIntRange},
 	"generator-time-range": SingletonBuilder{Handler: generators.DefaultTimeRange},
+
 	// io
 	"io-reader-clipboard": SingletonBuilder{Handler: io.DefaultReaderClipboard},
 	"io-writer-clipboard": SingletonBuilder{Handler: io.DefaultWriterClipboard},
 	"io-writer-stdout":    SingletonBuilder{Handler: io.DefaultWriterStdOut},
 	"io-writer-file":      &io.WriterFile{},
+
 	// parser
 	"parser-unix":   SingletonBuilder{Handler: parsers.DefaultUnixParser},
 	"parser-json":   SingletonBuilder{Handler: parsers.DefaultJSONParser},
 	"parser-xlsx":   SingletonBuilder{Handler: parsers.DefaultXLSXParser},
 	"parser-base64": SingletonBuilder{Handler: parsers.DefaultBase64Parser},
+
+	// formatter
+	"formatter-xml": SingletonBuilder{Handler: formatters.DefaultXML},
 
 	// iterators
 	"iterator":        &iterators.Conf{},
@@ -68,9 +75,12 @@ var Builders = BuilderMap{
 	"iterator-chunk":  &iterators.Conf{Type: "chunk"},
 
 	// string
-	"string-split":     &strings.SeparatorConf{Type: "split"},
-	"string-join":      &strings.SeparatorConf{Type: "join"},
-	"finder-json-attr": &strings.FinderJSONAttr{},
+	"string-split":              &strings.SeparatorConf{Type: "split"},
+	"string-join":               &strings.SeparatorConf{Type: "join"},
+	"string-replace":            &strings.Replacer{},
+	"string-regexp-all-replace": &strings.RegexpAllReplacer{},
+	"string-unquote":            SingletonBuilder{Handler: &strings.Unquote{}},
+	"finder-json-attr":          &strings.FinderJSONAttr{},
 
 	// net
 	"net-http": SingletonBuilder{Handler: net.DefaultHTTP},

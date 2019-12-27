@@ -23,13 +23,20 @@ func TestParserUtf8_Handle(t *testing.T) {
 		{
 			name: "normal",
 			p:    Unquote{},
-			args: args{},
+			args: args{
+				reqRes: &pipeline.HandleRes{
+					Data: `"\u4e2d\u56fd"`,
+				},
+			},
+			wantRespRes: &pipeline.HandleRes{
+				Status: pipeline.HandleStatusOK,
+				Data:   `"中国"`,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := Unquote{}
-			gotRespRes, err := Handle(tt.args.ctx, tt.args.reqRes)
+			gotRespRes, err := tt.p.Handle(tt.args.ctx, tt.args.reqRes)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Unquote.Handle() error = %v, wantErr %v", err, tt.wantErr)
 				return
