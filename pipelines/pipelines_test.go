@@ -128,7 +128,7 @@ func Test_pipelineMap_UpdatePipeline(t *testing.T) {
 			err = lines.UpdateByConfJSON(tt.args.id, tt.args.confJSON)
 			t.Log("err:", err)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("lines.UpdateByConfJSON() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Lines.UpdateByConfJSON() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			t.Log((*lines).LineMap[tt.args.id].Handler)
 		})
@@ -191,7 +191,7 @@ func Test_pipelines_Delete(t *testing.T) {
 			err = p.Delete(tt.args.id)
 			t.Log("err:", err)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("lines.Delete() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Lines.Delete() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

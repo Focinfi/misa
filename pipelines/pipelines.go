@@ -24,22 +24,22 @@ func (m LineMap) GetHandlerOK(name string) (pipeline.Handler, bool) {
 	return handler.Handler, ok
 }
 
-type lines struct {
+type Lines struct {
 	LineMap LineMap
 	DepMap  map[string]*Dep
 }
 
-func (l lines) GetHandlerOK(id string) (pipeline.Handler, bool) {
+func (l Lines) GetHandlerOK(id string) (pipeline.Handler, bool) {
 	handler, ok := l.LineMap[id]
 	return handler.Handler, ok
 }
 
-func (l lines) GetDep(id string) (*Dep, bool) {
+func (l Lines) GetDep(id string) (*Dep, bool) {
 	dep, ok := l.DepMap[id]
 	return dep, ok
 }
 
-func InitLinesByFile(confPath string) (*lines, error) {
+func InitLinesByFile(confPath string) (*Lines, error) {
 	confs, err := parseConfJSON(confPath)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func InitLinesByFile(confPath string) (*lines, error) {
 	return InitLinesByConfs(confs)
 }
 
-func InitLinesByConfs(confs []pipeConf) (*lines, error) {
+func InitLinesByConfs(confs []pipeConf) (*Lines, error) {
 	m := make(LineMap)
 	for i, conf := range confs {
 		if _, ok := m[conf.ID]; ok {
@@ -69,13 +69,13 @@ func InitLinesByConfs(confs []pipeConf) (*lines, error) {
 		return nil, err
 	}
 
-	return &lines{
+	return &Lines{
 		LineMap: m,
 		DepMap:  depMap,
 	}, nil
 }
 
-func (l *lines) AddByConfJSON(id, confJSON string) error {
+func (l *Lines) AddByConfJSON(id, confJSON string) error {
 	line, err := pipeline.NewLineByJSON(confJSON, builders.Builders, l)
 	if err != nil {
 		return fmt.Errorf("add pipeline with conf id by json err: %v", err)
@@ -102,7 +102,7 @@ func (l *lines) AddByConfJSON(id, confJSON string) error {
 	return nil
 }
 
-func (l *lines) UpdateByConfJSON(id, confJSON string) error {
+func (l *Lines) UpdateByConfJSON(id, confJSON string) error {
 	line, ok := l.LineMap[id]
 	if !ok {
 		return fmt.Errorf("pipeline with id(%#v) not found", id)
@@ -146,7 +146,7 @@ func (l *lines) UpdateByConfJSON(id, confJSON string) error {
 	return nil
 }
 
-func (l *lines) Delete(id string) error {
+func (l *Lines) Delete(id string) error {
 	_, ok := l.LineMap[id]
 	if !ok {
 		return fmt.Errorf("pipeline with id(%#v) not found", id)
