@@ -122,7 +122,7 @@
     ]
   },
   {
-    "id":  "gen-int-slice",
+    "id": "gen-int-slice",
     "conf": [
       {
         "desc": "parse json into map",
@@ -343,7 +343,7 @@
           "required": true,
           "handler_builder_name": "finder-json-attr",
           "handler_builder_conf": {
-           "attr_path": "[0].conf[0].timeout"
+            "attr_path": "[0].conf[0].timeout"
           }
         },
         {
@@ -587,7 +587,7 @@
         "required": true,
         "handler_builder_name": "string-regexp-all-replace",
         "handler_builder_conf": {
-          "expr": "^[\\s|\\t|result\\-utf8\\:]*\\[(.*)\\][\\s|\\t]*$",
+          "expr": "^[^:]*:\\[(.*)\\][\\s|\\t]*$",
           "replacement": "$1"
         }
       },
@@ -622,6 +622,57 @@
           "ref_handler_id": "print"
         }
       ]
+    ]
+  },
+  {
+    "id": "xml-accno-protocolno",
+    "conf": [
+      {
+        "desc": "parse xlsx",
+        "timeout": 100000,
+        "required": true,
+        "ref_handler_id": "parse-xlsx"
+      },
+      {
+        "desc": "get account no and protocol no",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "{ acc_no: value.账户, protocol_no: value.网银互联协议号 }"
+        }
+      },
+      {
+        "desc": "clean all space",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "{ acc_no:  import(\"text\").trim_space(value.acc_no), protocol_no: import(\"text\").trim_space(value.protocol_no) }"
+        }
+      },
+      {
+        "desc": "remove item with empty protocol no",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "iterator-select",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "value.acc_no != \"\" && value.protocol_no != \"\""
+        }
+      },
+      {
+        "desc": "gen a acc_no: protocol_no map",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "iterator-reduce",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "is_map(reduced) ? func() { reduced[value.acc_no] = value.protocol_no; return reduced }() : {}"
+        }
+      }
     ]
   }
 ]
