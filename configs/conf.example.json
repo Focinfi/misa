@@ -292,7 +292,7 @@
         "handler_builder_name": "iterator-map",
         "handler_builder_conf": {
           "interpreter_name": "tengo",
-          "script": "\"ALTER TABLE pay_\" + value.db_idx + \".t_trans_\" + value.table_idx + \" ADD COLUMN F_bank_trans_type tinyint(8) unsigned not null default 1, add column F_trans_business_entry tinyint(8) unsigned not null default 1;\""
+          "script": "\"ALTER TABLE pay_\" + value.db_idx + \".t_trans_\" + value.table_idx + \" add column F_business_code varchar(32) not null default '';\""
         }
       },
       {
@@ -478,15 +478,6 @@
         "timeout": 10000,
         "required": true,
         "ref_handler_id": "join-newline"
-      },
-      {
-        "desc": "write to file",
-        "timeout": 1000,
-        "required": true,
-        "handler_builder_name": "io-writer-file",
-        "handler_builder_conf": {
-          "path": "/Users/Antony/Documents/g7pay/sql/service-area/bank-info.sql"
-        }
       }
     ]
   },
@@ -670,8 +661,140 @@
         "handler_builder_name": "iterator-reduce",
         "handler_builder_conf": {
           "interpreter_name": "tengo",
-          "script": "is_map(reduced) ? func() { reduced[value.acc_no] = value.protocol_no; return reduced }() : {}"
+          "script": "is_map(reduced) ? func() { reduced[value.acc_no] = value.protocol_no; return reduced }() : func() { r := {}; r[value.acc_no] = value.protocol_no; return r }()"
         }
+      }
+    ]
+  },
+  {
+    "id": "get_merchant_id",
+    "conf": [
+      {
+        "desc": "read json from clipboard",
+        "timeout": 1000,
+        "required": true,
+        "ref_handler_id": "read-from-clipboard"
+      },
+      {
+        "desc": "parse json",
+        "timeout": 1000,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "get data",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "finder-json-attr",
+        "handler_builder_conf": {
+          "attr_path": "data"
+        }
+      },
+      {
+        "desc": "select merchant_id is empty",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "iterator-select",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "value.merchant_id == \"\""
+        }
+      },
+      {
+        "desc": "get merchant id",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "value"
+        }
+      }
+    ]
+  },
+  {
+    "id": "gen-sql-by-time-range",
+    "conf": [
+      {
+        "desc": "gen time slice",
+        "required": true,
+        "timeout": 1000,
+        "ref_handler_id": "gen-time-slice"
+      },
+      {
+        "desc": "format date slice",
+        "required": true,
+        "timeout": 1000,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "import(\"times\").time_format(value, \"2006_01_02\")"
+        }
+      },
+      {
+        "desc": "build sql",
+        "required": true,
+        "timeout": 1000,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "import(`text`).join(import(`enum`).map([`t_card_account_consume`, `t_card_account_freezes`, `t_card_account_transfer`, `t_card_recharge`, `t_card_account_credit_bill`, `t_card_credit_payback_bill`, `t_card_unique_account_bookkeeping_log`, `t_pay_account_logs`, `t_pay_channel_account_logs`, `t_pay_freezes`, `t_pay_payments`, `t_pay_receipts`, `t_pay_refund`, `t_pay_summary_trans`, `t_pay_trans`, `t_pay_drawback_batch`], func(i, v) { return `CREATE TABLE IF NOT EXISTS `+ v +`_` + value + ` LIKE ` + v + `_2019_10_27;`}),`\n`)"
+        }
+      },
+      {
+        "desc": "join into online",
+        "required": true,
+        "timeout": 1000,
+        "ref_handler_id": "join-newline"
+      },
+      {
+        "desc": "write to clipboard",
+        "required": true,
+        "timeout": 1000,
+        "ref_handler_id": "write-to-clipboard"
+      }
+    ]
+  },
+  {
+    "id": "parse-merchant-eas-xlsx",
+    "conf": [
+      {
+        "desc": "parse xlsx",
+        "timeout": 20000,
+        "required": true,
+        "ref_handler_id": "parse-xlsx"
+      },
+      {
+        "desc": "get bank no and bank name",
+        "timeout": 20000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "{ merchant_id: import(`text`).replace(value.merchant_id, ` `, ``, -1), number: import(`text`).replace(value.number, ` `, ``, -1) }"
+        }
+      },
+      {
+        "desc": "build insert one line",
+        "timeout": 20000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "`UPDATE t_merchant_account_info SET F_eas_supplier_number='`+value.number+`', F_need_open_eas_supplier=2 WHERE F_merchant_id=`+value.merchant_id+`;`"
+        }
+      },
+      {
+        "desc": "join",
+        "timeout": 10000,
+        "required": true,
+        "ref_handler_id": "join-newline"
+      },
+      {
+        "desc": "write to clipboard",
+        "timeout": 10000,
+        "required": true,
+        "ref_handler_id": "write-to-clipboard"
       }
     ]
   }
