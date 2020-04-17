@@ -1,5 +1,16 @@
 [
   {
+    "id": "diff-json",
+    "conf": [
+      {
+        "desc": "diff two json file",
+        "timeout": 100000,
+        "required": true,
+        "handler_builder_name": "diff-json"
+      }
+    ]
+  },
+  {
     "id": "format-xml",
     "conf": [
       {
@@ -738,7 +749,7 @@
         "handler_builder_name": "iterator-map",
         "handler_builder_conf": {
           "interpreter_name": "tengo",
-          "script": "import(`text`).join(import(`enum`).map([`t_card_account_consume`, `t_card_account_freezes`, `t_card_account_transfer`, `t_card_recharge`, `t_card_account_credit_bill`, `t_card_credit_payback_bill`, `t_card_unique_account_bookkeeping_log`, `t_pay_account_logs`, `t_pay_channel_account_logs`, `t_pay_freezes`, `t_pay_payments`, `t_pay_receipts`, `t_pay_refund`, `t_pay_summary_trans`, `t_pay_trans`, `t_pay_drawback_batch`], func(i, v) { return `CREATE TABLE IF NOT EXISTS `+ v +`_` + value + ` LIKE ` + v + `_2019_10_27;`}),`\n`)"
+          "script": "import(`text`).join(import(`enum`).map([`t_card_unique_account_balance`, `t_card_unique_account_credit_balance`, `t_pay_account_balance`, `t_card_account_consume`, `t_card_account_freezes`, `t_card_account_transfer`, `t_card_recharge`, `t_card_account_credit_bill`, `t_card_credit_payback_bill`, `t_card_unique_account_bookkeeping_log`, `t_pay_account_logs`, `t_pay_channel_account_logs`, `t_pay_freezes`, `t_pay_payments`, `t_pay_receipts`, `t_pay_refund`, `t_pay_summary_trans`, `t_pay_trans`,`t_pay_drawback_batch`], func(i, v) { return `CREATE TABLE IF NOT EXISTS `+ v +`_` + value + ` LIKE ` + v + `_2019_10_27;`}),`\n`)"
         }
       },
       {
@@ -771,7 +782,7 @@
         "handler_builder_name": "iterator-map",
         "handler_builder_conf": {
           "interpreter_name": "tengo",
-          "script": "{ merchant_id: import(`text`).replace(value.merchant_id, ` `, ``, -1), number: import(`text`).replace(value.number, ` `, ``, -1) }"
+          "script": "{ merchant_name: import(`text`).replace(value.name, ` `, ``, -1), number: import(`text`).replace(value.EAS供应商编码, ` `, ``, -1) }"
         }
       },
       {
@@ -781,7 +792,7 @@
         "handler_builder_name": "iterator-map",
         "handler_builder_conf": {
           "interpreter_name": "tengo",
-          "script": "`UPDATE t_merchant_account_info SET F_eas_supplier_number='`+value.number+`', F_need_open_eas_supplier=2 WHERE F_merchant_id=`+value.merchant_id+`;`"
+          "script": "`UPDATE t_merchant_account_info SET F_eas_supplier_number='`+value.number+`', F_need_open_eas_supplier=1 WHERE F_merchant_name='`+value.merchant_name+`';`"
         }
       },
       {
@@ -795,6 +806,172 @@
         "timeout": 10000,
         "required": true,
         "ref_handler_id": "write-to-clipboard"
+      }
+    ]
+  },
+  {
+    "id": "parse-merchant-name-eas-xlsx",
+    "conf": [
+      {
+        "desc": "parse xlsx",
+        "timeout": 20000,
+        "required": true,
+        "ref_handler_id": "parse-xlsx"
+      },
+      {
+        "desc": "get bank no and bank name",
+        "timeout": 20000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "{ merchant_name: import(`text`).replace(value.name, ` `, ``, -1), number: import(`text`).replace(value.EAS供应商编码, ` `, ``, -1) }"
+        }
+      },
+      {
+        "desc": "select merchant name in to slice",
+        "timeout": 20000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "`select '`+value.merchant_name+`' as F_merchant_name`"
+        }
+      },
+      {
+        "desc": "join into a string",
+        "timeout": 20000,
+        "required": true,
+        "handler_builder_name": "string-join",
+        "handler_builder_conf": {
+          "separator": " union "
+        }
+      }
+    ]
+  },
+  {
+    "id": "get-card-bill-card",
+    "conf": [
+      {
+        "desc": "parse xlsx",
+        "timeout": 20000000,
+        "required": true,
+        "ref_handler_id": "parse-xlsx"
+      },
+      {
+        "desc": "remove empty bill_id item",
+        "timeout": 20000000,
+        "required": true,
+        "handler_builder_name": "iterator-select",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "value.F_bill_id != ``"
+        }
+      },
+      {
+        "desc": "get bill_id and amount",
+        "timeout": 300000000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "{ bill_id: import(`text`).parse_int(import(`text`).trim_space(value.F_bill_id), 10, 64), amount: import(`math`).floor(import(`text`).parse_float(import(`text`).trim_space(value.F_total_amount), 64)) }"
+        }
+      },
+      {
+        "desc": "bill_id-amount map",
+        "timeout": 20000000,
+        "required": true,
+        "handler_builder_name": "iterator-reduce",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "is_map(reduced) ? func() { reduced[value.bill_id] = value.amount; return reduced }() : func() { r := {}; r[value.bill_id] = value.amount; return r }()"
+        }
+      },
+      {
+        "desc": "save into file",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "io-writer-file",
+        "handler_builder_conf": {
+          "path": "./bill_donglibao.json"
+        }
+      }
+    ]
+  },
+  {
+    "id": "get-card-bill",
+    "conf": [
+      {
+        "desc": "parse xlsx",
+        "timeout": 20000000,
+        "required": true,
+        "ref_handler_id": "parse-xlsx"
+      },
+      {
+        "desc": "remove empty bill_id item",
+        "timeout": 20000000,
+        "required": true,
+        "handler_builder_name": "iterator-select",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "value.billID != ``"
+        }
+      },
+      {
+        "desc": "get bill_id and amount",
+        "timeout": 300000000,
+        "required": true,
+        "handler_builder_name": "iterator-map",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "{ bill_id: import(`text`).parse_int(import(`text`).trim_space(value.billID), 10, 64), amount: int(import(`fmt`).sprintf(`%.0f`,import(`text`).parse_float(import(`text`).trim_space(value.money_total), 64)*100)) }"
+        }
+      },
+      {
+        "desc": "bill_id-amount map",
+        "timeout": 20000000,
+        "required": true,
+        "handler_builder_name": "iterator-reduce",
+        "handler_builder_conf": {
+          "interpreter_name": "tengo",
+          "script": "is_map(reduced) ? func() { reduced[value.bill_id] = value.amount; return reduced }() : func() { r := {}; r[value.bill_id] = value.amount; return r }()"
+        }
+      },
+      {
+        "desc": "save into file",
+        "timeout": 10000,
+        "required": true,
+        "handler_builder_name": "io-writer-file",
+        "handler_builder_conf": {
+          "path": "./bill_donglibao.txt"
+        }
+      }
+    ]
+  },
+  {
+    "id": "diff-json-from-file",
+    "conf": [
+      {
+        "desc": "parse param in json",
+        "timeout": 1000,
+        "required": true,
+        "ref_handler_id": "parse-json"
+      },
+      {
+        "desc": "diff two json file",
+        "timeout": 100000,
+        "required": true,
+        "ref_handler_id": "diff-json"
+      },
+      {
+        "desc": "write to file",
+        "timeout": 100000,
+        "required": true,
+        "handler_builder_name": "io-writer-file",
+        "handler_builder_conf": {
+          "path": "./bill_diff.json"
+        }
       }
     ]
   }

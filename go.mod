@@ -15,6 +15,7 @@ require (
 	github.com/go-vgo/robotgo v0.0.0-20191205185624-edede45aab61
 	github.com/goby-lang/goby v0.1.11 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible
+	github.com/josephburnett/jd v0.0.0-20191228205456-aa1a7c66b42f
 	github.com/mattn/go-runewidth v0.0.7 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/nsf/jsondiff v0.0.0-20190712045011-8443391ee9b6 // indirect

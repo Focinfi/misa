@@ -2,6 +2,7 @@ package builders
 
 import (
 	"github.com/Focinfi/go-pipeline"
+	"github.com/Focinfi/misa/builders/diff"
 	"github.com/Focinfi/misa/builders/formatters"
 	"github.com/Focinfi/misa/builders/generators"
 	"github.com/Focinfi/misa/builders/gui"
@@ -96,4 +97,7 @@ var Builders = BuilderMap{
 
 	// os
 	"os-cmd-exec": &os.CmdExec{},
+
+	// diff
+	"diff-json": SingletonBuilder{Handler: diff.DefaultJSON},
 }

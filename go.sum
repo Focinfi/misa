@@ -77,6 +77,8 @@ github.com/jedib0t/go-pretty v4.3.0+incompatible h1:CGs8AVhEKg/n9YbUenWmNStRW2PH
 github.com/jedib0t/go-pretty v4.3.0+incompatible/go.mod h1:XemHduiw8R651AF9Pt4FwCTKeG3oo7hrHJAoznj9nag=
 github.com/jmoiron/sqlx v0.0.0-20160206221533-398dd5876282 h1:6C9piDBtoXfkPcl1pitty4DkBX3VN2rcH5ZXmQMaM0U=
 github.com/jmoiron/sqlx v0.0.0-20160206221533-398dd5876282/go.mod h1:IiEW3SEiiErVyFdH8NTuWjSifiEQKUoyK3LNqr2kCHU=
+github.com/josephburnett/jd v0.0.0-20191228205456-aa1a7c66b42f h1:ijUonnyvDekPD7lUF4oQ1LV+dKaTnchEzmenMFa6NL4=
+github.com/josephburnett/jd v0.0.0-20191228205456-aa1a7c66b42f/go.mod h1:aeV+6oc13ogwzcRNHBe4vbyLmoQxMfEDoqyqCU9oE30=
 github.com/leodido/go-urn v1.2.0 h1:hpXL4XnriNwQ/ABnpepYM/1vCLWNDfUNts8dX3xTG6Y=
 github.com/leodido/go-urn v1.2.0/go.mod h1:+8+nEpDfqqsY+g338gtMEUOtuK+4dEMhiQEgxpxOKII=
 github.com/lib/pq v0.0.0-20160316202507-3cd0097429be h1:FpIQCxe7U4bihlYIMAYrdDu7DKHvOHUF3EZ0xftWGGA=

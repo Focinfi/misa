@@ -51,6 +51,8 @@ github.com/inconshreveable/mousetrap
 # github.com/jedib0t/go-pretty v4.3.0+incompatible
 github.com/jedib0t/go-pretty/table
 github.com/jedib0t/go-pretty/text
+# github.com/josephburnett/jd v0.0.0-20191228205456-aa1a7c66b42f
+github.com/josephburnett/jd/lib
 # github.com/leodido/go-urn v1.2.0
 github.com/leodido/go-urn
 # github.com/mattn/go-runewidth v0.0.7
